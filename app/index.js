@@ -30,6 +30,11 @@ module.exports = class extends Generator {
         default : this.appname // Default to current folder name
       }, {
         type    : 'input',
+        name    : 'projectDescription',
+        message : 'Your project description',
+        store   : true
+      }, {
+        type    : 'input',
         name    : 'projectGroup',
         message : 'Your project group',
         store   : true,
@@ -76,13 +81,8 @@ module.exports = class extends Generator {
         this.destinationPath('build.gradle'),
         this.props
       );
-    } else {
-      this.fs.copyTpl(
-        this.templatePath('multi/build.gradle'),
-        this.destinationPath('build.gradle'),
-        this.props
-      );
     }
+    
     this.fs.copyTpl(
       this.templatePath('gradle.properties'),
       this.destinationPath('gradle.properties'),
@@ -91,7 +91,7 @@ module.exports = class extends Generator {
   }
 
   installing() {
-    
+
   }
 
   end() {
