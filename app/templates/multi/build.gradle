@@ -1,0 +1,149 @@
+buildscript {
+    repositories {
+        maven {
+           url "https://plugins.gradle.org/m2/"
+        }
+        jcenter()
+    }
+    dependencies {
+        classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.4"
+        classpath "org.owasp:dependency-check-gradle:3.1.2"
+        classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
+    }
+}
+
+plugins {
+    id "io.spring.dependency-management" version "1.0.5.RELEASE"
+    id "org.jetbrains.intellij" version "0.3.3"
+}
+
+description = "UBM Event Platform Event Information System"
+
+group=projectGroup
+version=projectVersion
+
+task printVersion {
+    doLast {
+        println project.version
+    }
+}
+
+subprojects {
+
+    buildscript {
+        repositories {
+            maven {
+                url "https://repo.spring.io/libs-milestone"
+            }
+            maven {
+                url "https://plugins.gradle.org/m2/"
+            }
+        }
+    }
+
+    ext {
+        assertJVersion = "3.8.0"
+        awsSdkVersion = "1.11.344"
+        bootstrapVersion = "4.1.1"
+        flywayVersion = "5.0.7"
+        gradleAptVersion = "0.15"
+        gradleAwsEcrVersion = "0.4.0"
+        gradleDockerVersion = "3.2.8"
+        gsonVersion = "2.8.2"
+        guavaVersion = "24.1-jre"
+        h2DatabaseVersion = "1.4.197"
+        hibernateValidationVersion = "6.0.9.Final"
+        hikariCPVersion = "2.7.8"
+        jQueryVersion = "2.1.4"
+        jUnitVersion = "4.12"
+        mapstructVersion = "1.2.0.Final"
+        mysqlConnectorVersion = "5.1.46"
+        restAssuredVersion = "3.0.7"
+        springBootVersion = "2.0.2.RELEASE"
+        springCloudVersion = "Finchley.RC2"
+        springDependencyManagementVersion = "1.0.5.RELEASE"
+        springfoxSwagger2Version = "2.8.0"
+        springRestDocsVersion = "2.0.2.RELEASE"
+        springRetry = "1.2.2.RELEASE"
+        springSecurityOAuthVersion = "2.3.2.RELEASE"
+        tomcatEmbedElVersion = "8.5.29"
+    }
+
+    apply plugin: "maven"
+    apply plugin: "maven-publish"
+    apply plugin: "idea"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "jacoco"
+    apply plugin: "java"
+    apply plugin: "org.owasp.dependencycheck"
+    apply plugin: "com.github.ben-manes.versions"
+
+    group=projectGroup
+    version=projectVersion
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    compileJava.options*.compilerArgs = [
+        "-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile",
+        "-Xlint:dep-ann", "-Xlint:divzero", "-Xlint:empty", "-Xlint:finally",
+        "-Xlint:overrides", "-Xlint:path", "-Xlint:processing", "-Xlint:static",
+        "-Xlint:try", "-Xlint:fallthrough", "-Xlint:rawtypes", "-Xlint:deprecation",
+        "-Xlint:unchecked", "-Xlint:-options", "-Xlint:deprecation"]
+
+    compileTestJava.options*.compilerArgs = [
+        "-Xlint:serial", "-Xlint:-varargs", "-Xlint:cast", "-Xlint:classfile",
+        "-Xlint:dep-ann", "-Xlint:divzero", "-Xlint:empty", "-Xlint:finally",
+        "-Xlint:overrides", "-Xlint:path", "-Xlint:processing", "-Xlint:static",
+        "-Xlint:try", "-Xlint:-fallthrough", "-Xlint:-rawtypes", "-Xlint:-deprecation",
+        "-Xlint:-unchecked", "-Xlint:-options", "-Xlint:deprecation"]
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://repo.spring.io/libs-milestone"
+        }
+        maven {
+            name "mavenSnapshots"
+            url awsRepositoryURL + "/snapshots"
+            credentials(AwsCredentials) {
+                accessKey awsRepositoryKey
+                secretKey awsRepositorySecret
+            }
+        }
+        maven {
+            name "mavenReleases"
+            url awsRepositoryURL + "/releases"
+            credentials(AwsCredentials) {
+                accessKey awsRepositoryKey
+                secretKey awsRepositorySecret
+            }
+        }
+    }
+
+    defaultTasks 'bootRun'
+
+    check.dependsOn jacocoTestReport
+
+    jacocoTestReport {
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+    }
+
+    dependencyCheck {
+        format="ALL"
+    }
+
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+        repositories {
+            add project.version.endsWith("-SNAPSHOT") ? project.repositories.mavenSnapshots : project.repositories.mavenReleases
+        }
+    }
+
+}
