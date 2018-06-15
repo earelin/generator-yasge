@@ -41,34 +41,6 @@ subprojects {
         }
     }
 
-    ext {
-        assertJVersion = "3.8.0"
-        awsSdkVersion = "1.11.344"
-        bootstrapVersion = "4.1.1"
-        flywayVersion = "5.0.7"
-        gradleAptVersion = "0.15"
-        gradleAwsEcrVersion = "0.4.0"
-        gradleDockerVersion = "3.2.8"
-        gsonVersion = "2.8.2"
-        guavaVersion = "24.1-jre"
-        h2DatabaseVersion = "1.4.197"
-        hibernateValidationVersion = "6.0.9.Final"
-        hikariCPVersion = "2.7.8"
-        jQueryVersion = "2.1.4"
-        jUnitVersion = "4.12"
-        mapstructVersion = "1.2.0.Final"
-        mysqlConnectorVersion = "5.1.46"
-        restAssuredVersion = "3.0.7"
-        springBootVersion = "2.0.2.RELEASE"
-        springCloudVersion = "Finchley.RC2"
-        springDependencyManagementVersion = "1.0.5.RELEASE"
-        springfoxSwagger2Version = "2.8.0"
-        springRestDocsVersion = "2.0.2.RELEASE"
-        springRetry = "1.2.2.RELEASE"
-        springSecurityOAuthVersion = "2.3.2.RELEASE"
-        tomcatEmbedElVersion = "8.5.29"
-    }
-
     apply plugin: "maven"
     apply plugin: "maven-publish"
     apply plugin: "idea"
