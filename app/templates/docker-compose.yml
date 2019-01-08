@@ -1,0 +1,7 @@
+version: '2'
+services:
+
+  service:
+    image: "${APP_NAME}:${APP_VERSION}"
+    ports:
+      - "9000"

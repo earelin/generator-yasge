@@ -1,11 +1,12 @@
 const chalk = require('chalk')
-const Generator = require('yeoman-generator');
+const Generator = require('yeoman-generator')
+const mkdirp = require('mkdirp')
 
 module.exports = class extends Generator {
 
   constructor(args, opts) {
-    super(args, opts);
-    this.props = {};
+    super(args, opts)
+    this.props = {}
   }
 
   initializing() {
@@ -18,7 +19,7 @@ module.exports = class extends Generator {
               |   |  |   _   | _____| ||   |_| ||   |___ 
               |___|  |__| |__||_______||_______||_______|
       `));
-    this.log("                ===" + chalk.yellow(" Yet Another Spring Generator ") + "===\n");
+    this.log("                ===" + chalk.yellow(" Yet Another Spring Generator ") + "===\n")
   }
 
   prompting() {
@@ -51,51 +52,44 @@ module.exports = class extends Generator {
         message: 'Enter default package name:',
         store   : true,
         default: this.appname
-      }, {
-        type    : 'list',
-        name    : 'type',
-        message : 'What type of project?',
-        choices : [
-            {
-                name: 'Single project',
-                value: 'single'
-            },{
-                name: 'Multi project',
-                value: 'multiple'
-            }
-        ],
-        store   : true,
-        default: 'single'
-      },]).then((answers) => {
-        if (answers.type === 'single') {
-          this.composeWith(require.resolve('../spring'));
-          this.props = Object.assign(answers, this.props);
-        }
-      });
+      }]).then((answers) => {
+        this.props = Object.assign(answers, this.props);        
+      })
   }
 
   writing() {
-    if (this.props.type === 'single') {
-      this.fs.copyTpl(
-        this.templatePath('single/build.gradle'),
-        this.destinationPath('build.gradle'),
-        this.props
-      );
-    }
+    this.createSourcesFoldersStructure()
+    this.createGradleFiles()
+  }
+
+  installing() {
+    
+  }
+
+  end() {
+    this.log(chalk.green("Bye!"))
+  }
+
+  createGradleFiles() {
+    this.fs.copyTpl(
+      this.templatePath('build.gradle'),
+      this.destinationPath('build.gradle'),
+      this.props
+    )
     
     this.fs.copyTpl(
       this.templatePath('gradle.properties'),
       this.destinationPath('gradle.properties'),
       this.props
-    );
+    )
   }
 
-  installing() {
-
+  createSourcesFoldersStructure() {
+    mkdirp('src/main/docker')
+    mkdirp('src/main/java')
+    mkdirp('src/main/resources/config')
+    mkdirp('src/test/java')
+    mkdirp('src/test/resources')
   }
 
-  end() {
-    this.log(chalk.green("Bye!"));
-  }
-
-};
+}

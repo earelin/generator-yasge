@@ -1,121 +1,78 @@
 buildscript {
     repositories {
         maven {
-           url "https://plugins.gradle.org/m2/"
+            url "https://plugins.gradle.org/m2/"
         }
         jcenter()
     }
     dependencies {
-        classpath "info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.2.4"
-        classpath "org.owasp:dependency-check-gradle:3.1.2"
-        classpath "com.github.ben-manes:gradle-versions-plugin:0.17.0"
+        classpath "de.aaschmid:gradle-cpd-plugin:${cpdVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
+        classpath "net.ltgt.gradle:gradle-apt-plugin:${gradleAptVersion}"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
-plugins {
-    id "io.spring.dependency-management" version "1.0.5.RELEASE"
-    id "org.jetbrains.intellij" version "0.3.3"
-}
+apply plugin: 'checkstyle'
+apply plugin: 'de.aaschmid.cpd'
+apply plugin: 'findbugs'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'jacoco'
+apply plugin: 'java'
+apply plugin: 'net.ltgt.apt'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'pmd'
 
-description = "<%=projectDescription%>"
+apply from: 'gradle/docker.gradle'
 
-group=projectGroup
-version=projectVersion
+description = 'UCM Storage Service'
 
-task printVersion {
-    doLast {
-        println project.version
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+compileJava.options*.compilerArgs = ["-Xlint:all"]
+compileTestJava.options*.compilerArgs = ["-Xlint:all"]
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
 
-subprojects {
-
-    buildscript {
-        repositories {
-            maven {
-                url "https://repo.spring.io/libs-milestone"
-            }
-            maven {
-                url "https://plugins.gradle.org/m2/"
-            }
-        }
-    }
-
-    apply plugin: "maven"
-    apply plugin: "maven-publish"
-    apply plugin: "idea"
-    apply plugin: "io.spring.dependency-management"
-    apply plugin: "jacoco"
-    apply plugin: "java"
-    apply plugin: "org.owasp.dependencycheck"
-    apply plugin: "com.github.ben-manes.versions"
-
-    group=projectGroup
-    version=projectVersion
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
-    compileJava.options*.compilerArgs = [
-        "-Xlint:serial", "-Xlint:varargs", "-Xlint:cast", "-Xlint:classfile",
-        "-Xlint:dep-ann", "-Xlint:divzero", "-Xlint:empty", "-Xlint:finally",
-        "-Xlint:overrides", "-Xlint:path", "-Xlint:processing", "-Xlint:static",
-        "-Xlint:try", "-Xlint:fallthrough", "-Xlint:rawtypes", "-Xlint:deprecation",
-        "-Xlint:unchecked", "-Xlint:-options", "-Xlint:deprecation"]
-
-    compileTestJava.options*.compilerArgs = [
-        "-Xlint:serial", "-Xlint:-varargs", "-Xlint:cast", "-Xlint:classfile",
-        "-Xlint:dep-ann", "-Xlint:divzero", "-Xlint:empty", "-Xlint:finally",
-        "-Xlint:overrides", "-Xlint:path", "-Xlint:processing", "-Xlint:static",
-        "-Xlint:try", "-Xlint:-fallthrough", "-Xlint:-rawtypes", "-Xlint:-deprecation",
-        "-Xlint:-unchecked", "-Xlint:-options", "-Xlint:deprecation"]
-
-    repositories {
-        jcenter()
-        maven {
-            url "https://repo.spring.io/libs-milestone"
-        }
-        maven {
-            name "mavenSnapshots"
-            url awsRepositoryURL + "/snapshots"
-            credentials(AwsCredentials) {
-                accessKey awsRepositoryKey
-                secretKey awsRepositorySecret
-            }
-        }
-        maven {
-            name "mavenReleases"
-            url awsRepositoryURL + "/releases"
-            credentials(AwsCredentials) {
-                accessKey awsRepositoryKey
-                secretKey awsRepositorySecret
-            }
-        }
-    }
-
-    defaultTasks 'bootRun'
-
-    check.dependsOn jacocoTestReport
-
-    jacocoTestReport {
-        reports {
-            xml.enabled = true
-            html.enabled = true
-        }
-    }
-
-    dependencyCheck {
-        format="ALL"
-    }
-
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
-        }
-        repositories {
-            add project.version.endsWith("-SNAPSHOT") ? project.repositories.mavenSnapshots : project.repositories.mavenReleases
-        }
-    }
-
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
 }
+
+repositories {
+    jcenter()
+    maven {
+        url "https://repo.spring.io/libs-milestone"
+    }
+}
+
+dependencies {
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleToolVersion}"
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-jetty"
+
+    compile "org.springframework.boot:spring-boot-devtools"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}
+
+defaultTasks 'bootRun'
+
+check.dependsOn jacocoTestReport
