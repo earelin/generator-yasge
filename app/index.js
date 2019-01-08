@@ -26,26 +26,20 @@ module.exports = class extends Generator {
     return this.prompt([{
         type    : 'input',
         name    : 'name',
-        message : 'Your project name',
+        message : 'Name',
         store   : true,
         default : this.appname // Default to current folder name
       }, {
         type    : 'input',
         name    : 'projectDescription',
-        message : 'Your project description',
+        message : 'Description',
         store   : true
       }, {
         type    : 'input',
         name    : 'projectGroup',
-        message : 'Your project group',
+        message : 'Project group',
         store   : true,
         default : 'com-example'
-      }, {
-        type    : 'input',
-        name    : 'folder',
-        message : 'Your project folder',
-        store   : true,
-        default : '.'
       }, {
         type: 'input',
         name: 'packageName',
@@ -58,8 +52,7 @@ module.exports = class extends Generator {
   }
 
   writing() {
-    this.createSourcesFoldersStructure()
-    this.createGradleFiles()
+    this._createBasicStructure()
   }
 
   installing() {
@@ -70,26 +63,74 @@ module.exports = class extends Generator {
     this.log(chalk.green("Bye!"))
   }
 
-  createGradleFiles() {
+  _createBasicStructure() {        
+    
+    mkdirp('src/main/resources/config')
+    mkdirp('src/test/java')
+    mkdirp('src/test/resources')
+
     this.fs.copyTpl(
-      this.templatePath('build.gradle'),
+      this.templatePath('gitignore'),
+      this.destinationPath('.gitignore')
+    )
+
+    this.fs.copyTpl(
+      this.templatePath('gradle/build.gradle'),
       this.destinationPath('build.gradle'),
       this.props
     )
     
     this.fs.copyTpl(
-      this.templatePath('gradle.properties'),
+      this.templatePath('gradle/gradle.properties'),
       this.destinationPath('gradle.properties'),
       this.props
     )
-  }
 
-  createSourcesFoldersStructure() {
+    mkdirp('gradle')
+
+    this.fs.copyTpl(
+      this.templatePath('docker/docker.gradle'),
+      this.destinationPath('gradle/docker.gradle'),
+      this.props
+    )
+
     mkdirp('src/main/docker')
-    mkdirp('src/main/java')
-    mkdirp('src/main/resources/config')
-    mkdirp('src/test/java')
-    mkdirp('src/test/resources')
+
+    this.fs.copyTpl(
+      this.templatePath('docker/Dockerfile'),
+      this.destinationPath('src/main/docker/Dockerfile'),
+      this.props
+    )
+
+    this.fs.copyTpl(
+      this.templatePath('docker/docker-compose-infrastructure.yml'),
+      this.destinationPath('docker-compose-infrastructure.yml'),
+      this.props
+    )
+
+    this.fs.copyTpl(
+      this.templatePath('docker/docker-compose.yml'),
+      this.destinationPath('docker-compose.yml'),
+      this.props
+    )
+
+    const basePackagePath = this.props.packageName.replace('.', '/')
+
+    mkdirp('src/main/java/' + basePackagePath)
+
+    this.fs.copyTpl(
+      this.templatePath('Application.java'),
+      this.destinationPath( 'src/main/java/' + basePackagePath + '/Application.java'),
+      this.props
+    )
+
+    mkdirp('src/test/java/' + basePackagePath)
+
+    this.fs.copyTpl(
+      this.templatePath('Application.java'),
+      this.destinationPath( 'src/test/java/' + basePackagePath + '/ApplicationTest.java'),
+      this.props
+    )
   }
 
 }
