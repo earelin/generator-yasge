@@ -10,7 +10,7 @@ module.exports = class extends Generator {
   }
 
   initializing() {
-    this.log(chalk.green(`        
+    this.log(chalk.green(` 
              __   __  _______  _______  _______  _______ 
             |  | |  ||   _   ||       ||       ||       |
             |  |_|  ||  |_|  ||  _____||    ___||    ___|
@@ -46,9 +46,21 @@ module.exports = class extends Generator {
         message: 'Enter default package name:',
         store   : true,
         default: this.appname
+      }, {
+        type: 'checkbox',
+        name: 'storageSystem',
+        message: 'Select storage systems',
+        store: true,
+        choices: ['MySQL', 'ElasticSearch']
+      }, {
+        type: 'checkbox',
+        name: 'components',
+        message: 'Select additional components',
+        store: true,
+        choices: ['REST Server', 'REST Client', 'Amazon Message Queue']
       }]).then((answers) => {
-        this.props = Object.assign(answers, this.props);        
-      })
+        this.props = Object.assign(answers, this.props)
+      })      
   }
 
   writing() {
@@ -56,14 +68,14 @@ module.exports = class extends Generator {
   }
 
   installing() {
-    
+    this.spawnCommand('gradle', ['wrapper', 'check'])
   }
 
   end() {
     this.log(chalk.green("Bye!"))
   }
 
-  _createBasicStructure() {        
+  _createBasicStructure() {
     
     mkdirp('src/main/resources/config')
     mkdirp('src/test/java')
