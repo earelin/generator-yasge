@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "de.aaschmid:gradle-cpd-plugin:${cpdVersion}"
+        classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:${gradleSpotBugsVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
         classpath "net.ltgt.gradle:gradle-apt-plugin:${gradleAptVersion}"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
@@ -14,8 +14,6 @@ buildscript {
 }
 
 apply plugin: 'checkstyle'
-apply plugin: 'de.aaschmid.cpd'
-apply plugin: 'findbugs'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'java'
@@ -77,6 +75,24 @@ jacocoTestReport {
     }
 }
 
-defaultTasks 'bootRun'
-
 check.dependsOn jacocoTestReport
+
+pmd {
+    ignoreFailures = true
+}
+
+spotbugs {
+    sourceSets = [sourceSets.main]
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "low"
+}
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
+
+defaultTasks 'bootRun'

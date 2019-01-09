@@ -47,17 +47,53 @@ module.exports = class extends Generator {
         store   : true,
         default: this.appname
       }, {
+        type: 'list',
+        name: 'cloudSupport',
+        message: 'Cloud support',
+        store: true,
+        choices: [
+          'AWS',
+          'Google Cloud',
+          'None'
+        ]
+      }, {
         type: 'checkbox',
         name: 'storageSystem',
         message: 'Select storage systems',
         store: true,
-        choices: ['ElasticSearch', 'MySQL']
+        choices: [
+          'AWS S3',
+          'GCP Storage'
+        ]
+      }, {
+        type: 'checkbox',
+        name: 'databaseSystem',
+        message: 'Select database/indexing systems',
+        store: true,
+        choices: [
+          'ElasticSearch',
+          'MySQL',
+          'Redis'          
+        ]
+      }, {
+        type: 'list',
+        name: 'messagingSystem',
+        message: 'Select messaging systems',
+        store: true,
+        choices: [
+          'AWS Message Queue',
+          'GCP Messaging',
+          'None'
+        ]
       }, {
         type: 'checkbox',
         name: 'components',
         message: 'Select additional components',
         store: true,
-        choices: ['Amazon Message Queue', 'REST Client', 'REST Server']
+        choices: [          
+          'REST Client',
+          'REST Server'                   
+        ]
       }]).then((answers) => {
         this.props = Object.assign(answers, this.props)
       })      
@@ -65,6 +101,7 @@ module.exports = class extends Generator {
 
   writing() {
     this._createBasicStructure()
+    
   }
 
   installing() {
@@ -76,78 +113,106 @@ module.exports = class extends Generator {
   }
 
   _createBasicStructure() {
-    
-    mkdirp('src/main/resources/config')
-    mkdirp('src/test/java')
-    mkdirp('src/test/resources')
 
-    this.fs.copyTpl(
-      this.templatePath('gitignore'),
-      this.destinationPath('.gitignore')
-    )
+    this.basePackagePath = this.props.packageName.replace(/\./g, '/')
 
-    this.fs.copyTpl(
-      this.templatePath('checkstyle.xml'),
-      this.destinationPath('checkstyle.xml')
-    )
+    const folders = [
+      'gradle',
+      'src/main/docker',
+      'src/main/resources/config',
+      'src/test/java/' + basePackagePat,
+      'src/test/resources',
+      'src/test/java/' + basePackagePat
+    ]
 
-    this.fs.copyTpl(
-      this.templatePath('gradle/build.gradle'),
-      this.destinationPath('build.gradle'),
-      this.props
-    )
-    
-    this.fs.copyTpl(
-      this.templatePath('gradle/gradle.properties'),
-      this.destinationPath('gradle.properties'),
-      this.props
-    )
+    this._createFolders(folders);
 
-    mkdirp('gradle')
+    const templates = [
+      {
+        template: 'gitignore',
+        destination: '.gitignore'
+      },
+      {
+        template: 'checkstyle.xml',
+        destination: 'checkstyle.xml'
+      },
+      {
+        template: 'gradle/build.gradle',
+        destination: 'build.gradle'
+      },
+      {
+        template: 'gradle/gradle.properties',
+        destination: 'gradle.properties'
+      },
+      {
+        template: 'docker/docker.gradle',
+        destination: 'gradle/docker.gradle'
+      },
+      {
+        template: 'docker/Dockerfile',
+        destination: 'src/main/docker/Dockerfile'
+      },
+      {
+        template: 'docker/docker-compose-infrastructure.yml',
+        destination: 'docker-compose-infrastructure.yml'
+      },
+      {
+        template: 'docker/docker-compose.yml',
+        destination: 'docker-compose.yml'
+      },
+      {
+        template: 'Application.java',
+        destination: 'src/main/java/' + basePackagePath + '/Application.java'
+      },
+      {
+        template: 'ApplicationTest.java',
+        destination: 'src/test/java/' + basePackagePath + '/ApplicationTest.java'
+      }
+    ]
 
-    this.fs.copyTpl(
-      this.templatePath('docker/docker.gradle'),
-      this.destinationPath('gradle/docker.gradle'),
-      this.props
-    )
+    this._copyTemplates(templates)
+  }
 
-    mkdirp('src/main/docker')
+  _configureCloudSupport() {
+    let templates = [
+      {
+        template: 'conf/application.yml',
+        destination: 'conf/application.yml'
+      },
+      {
+        template: 'conf/application-dev.yml',
+        destination: 'conf/application-dev.yml'
+      }
+    ]
 
-    this.fs.copyTpl(
-      this.templatePath('docker/Dockerfile'),
-      this.destinationPath('src/main/docker/Dockerfile'),
-      this.props
-    )
+    if (this.props.cloudSupport !== 'None') {
+      let templates = [
+        {
+          template: 'conf/bootstrap.yml',
+          destination: 'conf/bootstrap.yml'
+        }
+      ]
+    }
+  }
 
-    this.fs.copyTpl(
-      this.templatePath('docker/docker-compose-infrastructure.yml'),
-      this.destinationPath('docker-compose-infrastructure.yml'),
-      this.props
-    )
+  _configureStorageSystems() {
 
-    this.fs.copyTpl(
-      this.templatePath('docker/docker-compose.yml'),
-      this.destinationPath('docker-compose.yml'),
-      this.props
-    )
+  }
 
-    const basePackagePath = this.props.packageName.replace(/\./g, '/')
+  _createFolders(folders) {
+    for (let i = 0; i < folders.length; i++) {
+      mkdirp(folders[i])
+    }
+  }
 
-    mkdirp('src/main/java/' + basePackagePath)
-
-    this.fs.copyTpl(
-      this.templatePath('Application.java'),
-      this.destinationPath( 'src/main/java/' + basePackagePath + '/Application.java'),
-      this.props
-    )
-
-    mkdirp('src/test/java/' + basePackagePath)
-
-    this.fs.copyTpl(
-      this.templatePath('ApplicationTest.java'),
-      this.destinationPath( 'src/test/java/' + basePackagePath + '/ApplicationTest.java'),
-      this.props
-    )
+  _copyTemplates(templates) {
+    for (let i = 0; i < templates.length; i++) {
+      this.fs.copyTpl(
+        this.templatePath(templates[i].template),
+        this.destinationPath(templates[i].destination),
+        this.props
+      )
+    }
   }
 
 }
