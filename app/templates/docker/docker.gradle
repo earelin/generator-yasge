@@ -6,7 +6,6 @@ buildscript {
     }
     dependencies {
         classpath "com.bmuschko:gradle-docker-plugin:${gradleDockerVersion}"
-        classpath "gradle.plugin.com.patdouble:gradle-aws-ecr-plugin:${gradleAwsEcrVersion}"
     }
 }
 
@@ -27,7 +26,7 @@ task buildDocker(type: DockerBuildImage, dependsOn: 'copyDockerFiles') {
     description = "Package application as Docker image"
     group = "Docker"
     inputDir = project.file("${project.buildDir}/docker")
-    tags = ["uep/eis-${project.name}:latest".toString(), "uep/eis-${project.name}:${project.version}".toString()]
+    tags = ["${project.name}:latest".toString(), "${project.name}:${project.version}".toString()]
 }
 
 buildDocker.dependsOn build

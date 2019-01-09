@@ -66,6 +66,10 @@ dependencies {
     testCompile "org.springframework.boot:spring-boot-starter-test"
 }
 
+checkstyle {
+    configFile = file("${project.rootDir}/checkstyle.xml")
+}
+
 jacocoTestReport {
     reports {
         xml.enabled = true

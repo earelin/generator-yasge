@@ -51,13 +51,13 @@ module.exports = class extends Generator {
         name: 'storageSystem',
         message: 'Select storage systems',
         store: true,
-        choices: ['MySQL', 'ElasticSearch']
+        choices: ['ElasticSearch', 'MySQL']
       }, {
         type: 'checkbox',
         name: 'components',
         message: 'Select additional components',
         store: true,
-        choices: ['REST Server', 'REST Client', 'Amazon Message Queue']
+        choices: ['Amazon Message Queue', 'REST Client', 'REST Server']
       }]).then((answers) => {
         this.props = Object.assign(answers, this.props)
       })      
@@ -84,6 +84,11 @@ module.exports = class extends Generator {
     this.fs.copyTpl(
       this.templatePath('gitignore'),
       this.destinationPath('.gitignore')
+    )
+
+    this.fs.copyTpl(
+      this.templatePath('checkstyle.xml'),
+      this.destinationPath('checkstyle.xml')
     )
 
     this.fs.copyTpl(
@@ -126,7 +131,7 @@ module.exports = class extends Generator {
       this.props
     )
 
-    const basePackagePath = this.props.packageName.replace('.', '/')
+    const basePackagePath = this.props.packageName.replace(/\./g, '/')
 
     mkdirp('src/main/java/' + basePackagePath)
 
@@ -139,7 +144,7 @@ module.exports = class extends Generator {
     mkdirp('src/test/java/' + basePackagePath)
 
     this.fs.copyTpl(
-      this.templatePath('Application.java'),
+      this.templatePath('ApplicationTest.java'),
       this.destinationPath( 'src/test/java/' + basePackagePath + '/ApplicationTest.java'),
       this.props
     )
