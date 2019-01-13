@@ -1,0 +1,3 @@
+/*
+ * SQL Schema definition
+ */

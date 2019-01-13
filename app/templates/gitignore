@@ -1,16 +1,41 @@
-# Compiled class file
+### Java ###
 *.class
-
-# Log file
 *.log
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Gradle
-build
+### Gradle ###
 .gradle
+/build/
 
-# IDE
+### Visual studio code ###
 .idea
 *.iml
+.project
+/.settings/
+.classpath
+bin
+/.sonarlint/
+/.vscode/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/

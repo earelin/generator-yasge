@@ -1,0 +1,17 @@
+management:
+  health:
+    defaults:
+      enabled: true
+<% if (rdms) { -%>
+    db:
+      enabled: true
+<% } -%>
+
+<% if (webServer) { -%>
+server:
+  port: ${PORT:8400}
+  <% if (databaseSystem !== 'None') { -%>
+spring:
+  jpa:
+    open-in-view: false
+<% }} -%>

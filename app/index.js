@@ -1,3 +1,5 @@
+const AppPrompt = require('./prompt')
+const Templates = require('./templates')
 const chalk = require('chalk')
 const Generator = require('yeoman-generator')
 const mkdirp = require('mkdirp')
@@ -10,6 +12,7 @@ module.exports = class extends Generator {
   }
 
   initializing() {
+    // ASCII font Modular
     this.log(chalk.green(` 
              __   __  _______  _______  _______  _______ 
             |  | |  ||   _   ||       ||       ||       |
@@ -23,85 +26,21 @@ module.exports = class extends Generator {
   }
 
   prompting() {
-    return this.prompt([{
-        type    : 'input',
-        name    : 'name',
-        message : 'Name',
-        store   : true,
-        default : this.appname // Default to current folder name
-      }, {
-        type    : 'input',
-        name    : 'projectDescription',
-        message : 'Description',
-        store   : true
-      }, {
-        type    : 'input',
-        name    : 'projectGroup',
-        message : 'Project group',
-        store   : true,
-        default : 'com-example'
-      }, {
-        type: 'input',
-        name: 'packageName',
-        message: 'Enter default package name:',
-        store   : true,
-        default: this.appname
-      }, {
-        type: 'list',
-        name: 'cloudSupport',
-        message: 'Cloud support',
-        store: true,
-        choices: [
-          'AWS',
-          'Google Cloud',
-          'None'
-        ]
-      }, {
-        type: 'checkbox',
-        name: 'storageSystem',
-        message: 'Select storage systems',
-        store: true,
-        choices: [
-          'AWS S3',
-          'GCP Storage'
-        ]
-      }, {
-        type: 'checkbox',
-        name: 'databaseSystem',
-        message: 'Select database/indexing systems',
-        store: true,
-        choices: [
-          'ElasticSearch',
-          'MySQL',
-          'Redis'          
-        ]
-      }, {
-        type: 'list',
-        name: 'messagingSystem',
-        message: 'Select messaging systems',
-        store: true,
-        choices: [
-          'AWS Message Queue',
-          'GCP Messaging',
-          'None'
-        ]
-      }, {
-        type: 'checkbox',
-        name: 'components',
-        message: 'Select additional components',
-        store: true,
-        choices: [          
-          'REST Client',
-          'REST Server'                   
-        ]
-      }]).then((answers) => {
+    return this.prompt(AppPrompt.generateUi())
+      .then((answers) => {
         this.props = Object.assign(answers, this.props)
-      })      
+        this.props = this._proccessOptions(this.props)
+      })
   }
 
   writing() {
     this._createBasicStructure()
-    
+    if (this.props.cloudEnv) {
+      this._copyTemplates(Templates.cloudSupportTemplates())
+    }
+    if (this.props.rdms) {
+      this._copyTemplates(Templates.rdmsTemplates())
+    }
   }
 
   installing() {
@@ -112,91 +51,20 @@ module.exports = class extends Generator {
     this.log(chalk.green("Bye!"))
   }
 
+  _proccessOptions(options) {
+    let newOptions = options;
+    
+    newOptions.cloudEnv = options.cloudSupport !== 'None'    
+    newOptions.rdms = options.databaseSystem === 'MySQL'
+    newOptions.webServer = options.components.includes('REST Server')
+        || options.components.includes('Web Server')
+
+    return newOptions;
+  }
+
   _createBasicStructure() {
-
-    this.basePackagePath = this.props.packageName.replace(/\./g, '/')
-
-    const folders = [
-      'gradle',
-      'src/main/docker',
-      'src/main/resources/config',
-      'src/test/java/' + basePackagePat,
-      'src/test/resources',
-      'src/test/java/' + basePackagePat
-    ]
-
-    this._createFolders(folders);
-
-    const templates = [
-      {
-        template: 'gitignore',
-        destination: '.gitignore'
-      },
-      {
-        template: 'checkstyle.xml',
-        destination: 'checkstyle.xml'
-      },
-      {
-        template: 'gradle/build.gradle',
-        destination: 'build.gradle'
-      },
-      {
-        template: 'gradle/gradle.properties',
-        destination: 'gradle.properties'
-      },
-      {
-        template: 'docker/docker.gradle',
-        destination: 'gradle/docker.gradle'
-      },
-      {
-        template: 'docker/Dockerfile',
-        destination: 'src/main/docker/Dockerfile'
-      },
-      {
-        template: 'docker/docker-compose-infrastructure.yml',
-        destination: 'docker-compose-infrastructure.yml'
-      },
-      {
-        template: 'docker/docker-compose.yml',
-        destination: 'docker-compose.yml'
-      },
-      {
-        template: 'Application.java',
-        destination: 'src/main/java/' + basePackagePath + '/Application.java'
-      },
-      {
-        template: 'ApplicationTest.java',
-        destination: 'src/test/java/' + basePackagePath + '/ApplicationTest.java'
-      }
-    ]
-
-    this._copyTemplates(templates)
-  }
-
-  _configureCloudSupport() {
-    let templates = [
-      {
-        template: 'conf/application.yml',
-        destination: 'conf/application.yml'
-      },
-      {
-        template: 'conf/application-dev.yml',
-        destination: 'conf/application-dev.yml'
-      }
-    ]
-
-    if (this.props.cloudSupport !== 'None') {
-      let templates = [
-        {
-          template: 'conf/bootstrap.yml',
-          destination: 'conf/bootstrap.yml'
-        }
-      ]
-    }
-  }
-
-  _configureStorageSystems() {
-
+    const basePackagePath = this.props.packageName.replace(/\./g, '/')
+    this._copyTemplates(Templates.baseTemplates(basePackagePath))
   }
 
   _createFolders(folders) {

@@ -10,7 +10,8 @@
     "Spring Security",
     "JPA",
     "Hibernate",
-    "Docker"
+    "Docker",
+    "Gradle"
   ],
   "homepage": "https://github.com/earelin/yasge",
   "bugs": "https://github.com/earelin/yasge/issues",
@@ -23,8 +24,7 @@
     "url": "git://github.com/earelin/yasge.git"
   },
   "files": [
-    "app",
-    "project"
+    "app"
   ],
   "main": "app/index.js",
   "scripts": {

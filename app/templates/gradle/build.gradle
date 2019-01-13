@@ -1,68 +1,82 @@
-buildscript {
+buildscript {    
     repositories {
+        mavenCentral()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
-        jcenter()
     }
     dependencies {
         classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:${gradleSpotBugsVersion}"
-        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
-        classpath "net.ltgt.gradle:gradle-apt-plugin:${gradleAptVersion}"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
 apply plugin: 'checkstyle'
+apply plugin: 'com.github.spotbugs'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'jacoco'
 apply plugin: 'java'
-apply plugin: 'net.ltgt.apt'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'pmd'
 
 apply from: 'gradle/docker.gradle'
 
-description = 'UCM Storage Service'
+group = '<%=projectGroup%>'
+version = '0.0.1-SNAPSHOT'
+description = '<%=projectDescription%>'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = <%=javaVersion%>
+targetCompatibility = <%=javaVersion%>
 
 compileJava.options*.compilerArgs = ["-Xlint:all"]
 compileTestJava.options*.compilerArgs = ["-Xlint:all"]
 
+<% if (webServer) { -%>
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+<% } -%>
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+dependencies {
+    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'    
+    checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleToolVersion}"
+
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    runtimeOnly "org.springframework.boot:spring-boot-devtools"
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+
+<% if (components.includes('Lombok')) { -%>
+    compileOnly 'org.projectlombok:lombok'
+<% } -%>
+<% if (rdms) { -%>
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile "org.flywaydb:flyway-core:${flywayVersion}"    
+<% } -%>
+<% if (databaseSystem.includes('MySQL')) { -%>
+    runtimeOnly "com.h2database:h2:${h2DatabaseVersion}"
+    runtimeOnly 'mysql:mysql-connector-java'    
+<% } -%>
+<% if (webServer) { -%>
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty'
+<% } -%>
+<% if (components.includes('Web Server')) { -%>
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+<% } -%>
+}
+
+<% if (cloudEnv) { -%>
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
-
-configurations {
-    compile.exclude module: "spring-boot-starter-tomcat"
-}
-
-repositories {
-    jcenter()
-    maven {
-        url "https://repo.spring.io/libs-milestone"
-    }
-}
-
-dependencies {
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleToolVersion}"
-
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-jetty"
-
-    compile "org.springframework.boot:spring-boot-devtools"
-
-    testCompile "org.springframework.boot:spring-boot-starter-test"
-}
+<% } -%>
 
 checkstyle {
     configFile = file("${project.rootDir}/checkstyle.xml")

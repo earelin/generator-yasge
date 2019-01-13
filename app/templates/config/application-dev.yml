@@ -1,0 +1,11 @@
+spring:
+<% if (rdms) { -%>
+  flyway:
+    locations: classpath:/db/migration,classpath:/db/dev
+  h2:
+    console:
+      enabled: true
+<% } -%>
+  output:
+    ansi:
+      enabled: always
