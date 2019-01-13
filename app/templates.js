@@ -1,6 +1,5 @@
-module.exports = {
-  
-  baseTemplates(basePackagePath) {
+module.exports = class {
+  static baseTemplates(basePackagePath) {
     return [
       {
         template: 'gitignore',
@@ -51,18 +50,18 @@ module.exports = {
         destination: 'src/main/resources/config/application-dev.yml'
       }
     ]
-  },
+  }
 
-  cloudSupportTemplates() {
+  static cloudSupportTemplates() {
     return [
       {
         template: 'config/bootstrap.yml',
         destination: 'src/main/resources/config/bootstrap.yml'
       }
     ]
-  },
+  }
 
-  rdmsTemplates() {
+  static rdmsTemplates() {
     return [
       {
         template: 'rdms/R__data.sql',

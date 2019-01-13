@@ -1,32 +1,22 @@
-const AppPrompt = require('./prompt')
+const generateUi = require('./prompt')
 const Templates = require('./templates')
+const Logo = require('../commons/logo')
 const chalk = require('chalk')
 const Generator = require('yeoman-generator')
 const mkdirp = require('mkdirp')
 
 module.exports = class extends Generator {
-
-  constructor(args, opts) {
-    super(args, opts)
-    this.props = {}
-  }
-
+  
   initializing() {
+    this.props = {}
+
     // ASCII font Modular
-    this.log(chalk.green(` 
-             __   __  _______  _______  _______  _______ 
-            |  | |  ||   _   ||       ||       ||       |
-            |  |_|  ||  |_|  ||  _____||    ___||    ___|
-            |       ||       || |_____ |   | __ |   |___ 
-            |_     _||       ||_____  ||   ||  ||    ___|
-              |   |  |   _   | _____| ||   |_| ||   |___ 
-              |___|  |__| |__||_______||_______||_______|
-      `));
-    this.log("                ===" + chalk.yellow(" Yet Another Spring Generator ") + "===\n")
+    this.log(chalk.green(Logo.getAscii()));
+    this.log("          === " + chalk.yellow("Spring project generation") + " ===\n")
   }
 
   prompting() {
-    return this.prompt(AppPrompt.generateUi())
+    return this.prompt(generateUi(this.appname))
       .then((answers) => {
         this.props = Object.assign(answers, this.props)
         this.props = this._proccessOptions(this.props)

@@ -21,12 +21,12 @@ apply plugin: 'pmd'
 
 apply from: 'gradle/docker.gradle'
 
-group = '<%=projectGroup%>'
+group = '<%- projectGroup %>'
 version = '0.0.1-SNAPSHOT'
-description = '<%=projectDescription%>'
+description = '<%- projectDescription %>'
 
-sourceCompatibility = <%=javaVersion%>
-targetCompatibility = <%=javaVersion%>
+sourceCompatibility = <%- javaVersion %>
+targetCompatibility = <%- javaVersion %>
 
 compileJava.options*.compilerArgs = ["-Xlint:all"]
 compileTestJava.options*.compilerArgs = ["-Xlint:all"]
