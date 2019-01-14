@@ -18,7 +18,7 @@ $ yo yasge
 $ yo yasge:create-class
 ```
 
-### Generate artifact from model
+### Generate artifacts from model
 
 ```
 $ yo yasge:import-model [model-yaml-file]
