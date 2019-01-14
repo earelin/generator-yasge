@@ -21,7 +21,7 @@ $ yo yasge:create-class
 ### Generate artifact from model
 
 ```
-$ yo yasge:import-model
+$ yo yasge:import-model <model-yaml-file>
 ```
 
 Yaml file model example
@@ -33,16 +33,16 @@ Post:
     title: String
     body: BigString
     author: person.Author
-    images: [image.Image]
+    images: [image.Image] # List of embedded images
 
 person.Person:
   abstract: true
   properties:
     id: Long
-    groups: (person.Group)
+    groups: (person.Group) # Set of groups
 
 person.Author:
-  extends: person.Person
+  extends: person.Person # Has a parent class
   properties:
     name: String
     email: String
