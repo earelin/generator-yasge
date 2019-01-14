@@ -44,16 +44,17 @@ Category:
     posts: [Post]+ # List of posts, one to many relationship
 
 person.Person:
+  key: email # By default id is used as primary key, if there is no id the key field has to be declared
   abstract: true # Abstract class, per table inheritance
   properties:
-    id: Long
+    email: String
     name: String
     groups: {person.Group}* # Set of groups, many to many relationship
 
 person.Author:
   extends: person.Person # Has a parent class
   properties:
-    email: String
+    signature: String
 
 person.Group:
   properties:
