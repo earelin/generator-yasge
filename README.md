@@ -70,7 +70,7 @@ image.Image:
 
 Supported types:
 
-Yaml type | Generated Java type
+Model type | Generated Java type
 --- | ---
 Boolean | Boolean
 Long | Long
