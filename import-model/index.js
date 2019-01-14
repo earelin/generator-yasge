@@ -48,8 +48,6 @@ module.exports = class extends YasgeGenerator {
   }
 
   writing() {
-    const basePackagePath = this.props.basePackage.replace(/\./g, '/')
-    
     ArtifactsGenerator.generateEntities(this.props)
 
     if (this.props.generateSql) {

@@ -39,7 +39,7 @@ person.Person:
   abstract: true
   properties:
     id: Long
-    groups: (person.Group) # Set of groups
+    groups: {person.Group} # Set of groups
 
 person.Author:
   extends: person.Person # Has a parent class
