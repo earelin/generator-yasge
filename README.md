@@ -29,8 +29,8 @@ model-yaml-file should be the path to a model yaml file from the root of the pro
 Yaml file model example
 
 ```yaml
-Post:
-  properties:
+Post: # Entity name
+  properties: # Entity property members with format: name: type
     id: Long
     title: String
     body: BigString
@@ -61,7 +61,7 @@ person.Group:
     name: String
 
 image.Image:
-  embedded: true
+  embedded: true # This entity will be embedded so it not an entity by itself
   properties:
     title: String
     url: String
@@ -69,7 +69,7 @@ image.Image:
 
 Supported types:
 
-Yaml type | Java equivalent
+Yaml type | Generated Java type
 --- | ---
 Boolean | Boolean
 Long | Long
