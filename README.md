@@ -1,6 +1,6 @@
-# yasge
+# Yasge
 
-Yeat Another Spring Generator is a set of yeoman generators for the Spring Framework
+Yeat Another Spring Generator is a set of yeoman generators for the Spring Framework.
 
 ## Usage
 
@@ -26,7 +26,9 @@ $ yo yasge:import-model [model-yaml-file]
 
 model-yaml-file should be the path to a model yaml file from the root of the project. By default the path is: 'model.yml'
 
-Yaml file model example
+The yaml file with the model has to contain one root entry per entity to be generated.
+
+#### Yaml file model example
 
 ```yaml
 Post: # Entity name
@@ -68,7 +70,7 @@ image.Image:
     url: String
 ```
 
-Supported types:
+#### Supported types
 
 Model type | Generated Java type
 --- | ---
