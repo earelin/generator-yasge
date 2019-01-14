@@ -66,3 +66,16 @@ image.Image:
     title: String
     url: String
 ```
+
+Supported types:
+
+Yaml type | Java equivalent
+--- | ---
+Boolean | Boolean
+Long | Long
+Double | Double
+String | String
+BigString | String with BigText jpa anotation
+Date | LocalDateTime
+ZonedDate | ZonedDateTime
+Any defined entity on the model | Java generated entity
