@@ -38,9 +38,5 @@
   "devDependencies": {
     "yo": "^2.0.5"
   },
-  "licenses": [
-    {
-      "type": "GPL3"
-    }
-  ]
+  "license": "GPL-3.0"
 }
