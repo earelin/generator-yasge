@@ -44,15 +44,6 @@ module.exports = function(appname) {
         'None'
       ]
     }, {
-      type: 'checkbox',
-      name: 'storageSystem',
-      message: 'Select storage systems',
-      store: true,
-      choices: [
-        'AWS S3',
-        'GCP Storage'
-      ]
-    }, {
       type: 'list',
       name: 'databaseSystem',
       message: 'Select database/indexing system',
@@ -78,6 +69,8 @@ module.exports = function(appname) {
       message: 'Select additional components',
       store: true,
       choices: [
+        'AWS S3',
+        'GCP Storage',
         'Lombok',
         'REST Client',
         'REST Server',

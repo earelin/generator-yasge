@@ -26,6 +26,9 @@
   "files": [
     "app",
     "create-class",
+    "create-controller",
+    "create-repository",
+    "create-service",
     "import-model"
   ],
   "main": "app/index.js",
