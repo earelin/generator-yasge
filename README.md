@@ -44,7 +44,7 @@ Category:
     posts: [Post]+ # List of posts, one to many relationship
 
 person.Person:
-  abstract: true
+  abstract: true # Abstract class, per table inheritance
   properties:
     id: Long
     name: String
