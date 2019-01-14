@@ -21,8 +21,10 @@ $ yo yasge:create-class
 ### Generate artifact from model
 
 ```
-$ yo yasge:import-model <model-yaml-file>
+$ yo yasge:import-model [model-yaml-file]
 ```
+
+model-yaml-file should be the path to a model yaml file from the root of the project. By default the path is: 'model.yml'
 
 Yaml file model example
 
@@ -32,19 +34,25 @@ Post:
     id: Long
     title: String
     body: BigString
-    author: person.Author
+    author: person.Author # Many to one relationship
     images: [image.Image] # List of embedded images
+
+Category:
+  properties:
+    id: Long
+    name: String
+    posts: [Post]+ # List of posts, one to many relationship
 
 person.Person:
   abstract: true
   properties:
     id: Long
-    groups: {person.Group} # Set of groups
+    name: String
+    groups: {person.Group}* # Set of groups, many to many relationship
 
 person.Author:
   extends: person.Person # Has a parent class
   properties:
-    name: String
     email: String
 
 person.Group:
