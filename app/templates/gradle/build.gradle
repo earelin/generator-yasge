@@ -53,11 +53,11 @@ dependencies {
 <% if (components.includes('Lombok')) { -%>
     compileOnly 'org.projectlombok:lombok'
 <% } -%>
-<% if (rdms) { -%>
+<% if (springDataEnabled && springDataRepositoryType === 'RDMS') { -%>
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile "org.flywaydb:flyway-core:${flywayVersion}"    
 <% } -%>
-<% if (databaseSystem.includes('MySQL')) { -%>
+<% if (springDataEnabled && springDataRepository === 'MySQL') {      -%>
     runtimeOnly "com.h2database:h2:${h2DatabaseVersion}"
     runtimeOnly 'mysql:mysql-connector-java'    
 <% } -%>

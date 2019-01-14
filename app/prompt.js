@@ -45,15 +45,15 @@ module.exports = function(appname) {
       ]
     }, {
       type: 'confirm',
-      name: 'jpaEnabled',
-      message: 'Enable JPA',
+      name: 'springDataEnabled',
+      message: 'Enable Spring Data',
       default: true
     }, {
       type: 'list',
-      name: 'jpaRepository',
-      message: 'Select a JPA repository type',
+      name: 'springDataRepository',
+      message: 'Select a Spring Data repository',
       when: function(answers) {
-        return answers.jpaEnabled
+        return answers.springDataEnabled
       },
       store: true,
        choices: [

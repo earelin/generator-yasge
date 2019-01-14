@@ -10,16 +10,16 @@ module.exports = class extends Generator {
   initializing() {
     this.props = {}
 
-    // ASCII font Modular
     this.log(chalk.green(Logo.getAscii()));
-    this.log("          === " + chalk.yellow("Spring project generation") + " ===\n")
+    this.log("          === "
+        + chalk.yellow("Spring project generation") + " ===\n")
   }
 
   prompting() {
     return this.prompt(generateUi(this.appname))
       .then((answers) => {
-        this.props = Object.assign(answers, this.props)
-        this.props = this._proccessOptions(this.props)
+        const options = Object.assign(answers, this.props)
+        this.props = this._proccessOptions(options)
       })
   }
 
@@ -28,7 +28,8 @@ module.exports = class extends Generator {
     if (this.props.cloudEnv) {
       this._copyTemplates(Templates.cloudSupportTemplates())
     }
-    if (this.props.rdms) {
+    if (this.props.springDataEnabled
+          && this.props.springDataRepositoryType === 'RDMS') {
       this._copyTemplates(Templates.rdmsTemplates())
     }
   }
@@ -41,16 +42,30 @@ module.exports = class extends Generator {
     this.log(chalk.green("Bye!"))
   }
 
-  _proccessOptions(options) {
-    let newOptions = options;
-    
-    newOptions.cloudEnv = options.cloudSupport !== 'None'    
-    newOptions.rdms = options.databaseSystem === 'MySQL'
-    newOptions.webServer = options.components.includes('REST Server')
+  _proccessOptions(options) {    
+    options.cloudEnv = options.cloudSupport !== 'None'
+    options.webServer = options.components.includes('REST Server')
         || options.components.includes('Web Server')
-    newOptions.travisJdk = options.javaVersion === '1.8'? 'oraclejdk8' : 'oraclejdk11'
+    options.travisJdk = options.javaVersion === '1.8'
+        ? 'oraclejdk8' : 'oraclejdk11'    
 
-    return newOptions;
+    if (options.springDataEnabled) {
+      switch (options.springDataRepository) {
+        case 'MySQL':
+          options.springDataRepositoryType = 'RDMS'
+          break
+        case 'ElasticSearch':
+          options.springDataRepositoryType = 'Document'
+          break
+        case 'Redis':
+          options.springDataRepositoryType = 'Redis'
+          break
+        default:
+          options.springDataRepositoryType = 'None'
+      }
+    }
+
+    return options;
   }
 
   _createBasicStructure() {
