@@ -3,6 +3,9 @@ const generateUi = require('./prompt')
 const chalk = require('chalk')
 const Logo = require('../commons/logo')
 
+/**
+ * Generates a basic class code.
+ */
 module.exports = class extends YasgeGenerator {
 
   initializing() {
@@ -29,8 +32,7 @@ module.exports = class extends YasgeGenerator {
       {
         template: 'Class.java',
         destination: `src/main/java/${classPackagePath}/${this.props.className}.java`
-      },
-      {
+      }, {
         template: 'ClassTest.java',
         destination: `src/test/java/${classPackagePath}/${this.props.className}Test.java`
       }

@@ -1,7 +1,7 @@
 package <%- classPackage %>;
 
 /**
- * <%- classDescription %>
+ * <%- classDescription %>.
  */
 public class <%- className %> {
 

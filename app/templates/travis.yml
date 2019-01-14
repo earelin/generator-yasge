@@ -1,0 +1,4 @@
+language: java
+jdk: <%- travisJdk %>
+after_success:
+  - curl -s https://codecov.io/bash | bash

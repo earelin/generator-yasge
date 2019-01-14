@@ -48,6 +48,7 @@ module.exports = class extends Generator {
     newOptions.rdms = options.databaseSystem === 'MySQL'
     newOptions.webServer = options.components.includes('REST Server')
         || options.components.includes('Web Server')
+    newOptions.travisJdk = options.javaVersion === '1.8'? 'oraclejdk8' : 'oraclejdk11'
 
     return newOptions;
   }

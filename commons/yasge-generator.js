@@ -14,7 +14,7 @@ module.exports = class extends Generator {
       this.fs.copyTpl(
         this.templatePath(templates[i].template),
         this.destinationPath(templates[i].destination),
-        this.props
+        templates[i].data ? templates[i].data : this.props
       )
     }
   }
