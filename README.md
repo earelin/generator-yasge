@@ -78,4 +78,4 @@ String | String
 BigString | String with BigText jpa anotation
 Date | LocalDateTime
 ZonedDate | ZonedDateTime
-Any defined entity on the model | Java generated entity
+Any entity defined on the model | Java generated entity
