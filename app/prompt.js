@@ -44,11 +44,19 @@ module.exports = function(appname) {
         'None'
       ]
     }, {
+      type: 'confirm',
+      name: 'jpaEnabled',
+      message: 'Enable JPA',
+      default: true
+    }, {
       type: 'list',
-      name: 'databaseSystem',
-      message: 'Select database/indexing system',
+      name: 'jpaRepository',
+      message: 'Select a JPA repository type',
+      when: function(answers) {
+        return answers.jpaEnabled
+      },
       store: true,
-      choices: [
+       choices: [
         'ElasticSearch',
         'MySQL',
         'Redis',
@@ -71,6 +79,7 @@ module.exports = function(appname) {
       choices: [
         'AWS S3',
         'GCP Storage',
+        'ElasticSearch',
         'Lombok',
         'REST Client',
         'REST Server',
