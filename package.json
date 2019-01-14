@@ -1,7 +1,7 @@
 {
   "name": "generator-yasge",
-  "version": "1.0.0-beta",
-  "description": "Yet another Spring generator",
+  "version": "1.0.0-beta1",
+  "description": "Yet another Spring Yeoman generator",
   "keywords": [
     "yeoman-generator",
     "Java",
@@ -13,15 +13,15 @@
     "Docker",
     "Gradle"
   ],
-  "homepage": "https://github.com/earelin/yasge",
-  "bugs": "https://github.com/earelin/yasge/issues",
+  "homepage": "https://github.com/earelin/generator-yasge",
+  "bugs": "https://github.com/earelin/generator-yasge/issues",
   "author": {
     "name": "Xavier Carriba",
     "url": "https://github.com/earelin"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/earelin/yasge.git"
+    "url": "git://github.com/earelin/generator-yasge.git"
   },
   "files": [
     "app",
