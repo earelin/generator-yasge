@@ -53,7 +53,7 @@ module.exports = function(appname) {
         return answers.springDataEnabled
       },
       store: true,
-       choices: [
+      choices: [
         'ElasticSearch',
         'MySQL',
         'Redis'
@@ -73,9 +73,9 @@ module.exports = function(appname) {
       message: 'Select additional components',
       store: true,
       choices: [
-        'AWS S3',
-        'GCP Storage',
+        'AWS S3',      
         'ElasticSearch',
+        'GCP Storage',
         'Lombok',
         'REST Client',
         'REST Server',

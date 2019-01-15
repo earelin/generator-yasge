@@ -43,6 +43,9 @@ module.exports = class {
       }, {
         template: 'config/application-dev.yml',
         destination: 'src/main/resources/config/application-dev.yml'
+      }, {
+        template: 'src/SpringProfiles.java',
+        destination: 'src/main/java/' + basePackagePath + '/utils/spring/SpringProfiles.java'
       }
     ]
   }
@@ -52,6 +55,9 @@ module.exports = class {
       {
         template: 'config/bootstrap.yml',
         destination: 'src/main/resources/config/bootstrap.yml'
+      }, {
+        template: 'config/bootstrap.yml',
+        destination: 'src/main/resources/config/bootstrap-dev.yml'
       }
     ]
   }

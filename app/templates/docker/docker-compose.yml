@@ -4,10 +4,11 @@ services:
   # Application container
   service:
     image: <%- projectName %>:latest
+<% if (webServer) { -%>
     ports:
       - "8080:<%- webserverPort %>"
-
-<% if (springDataRepository === 'MySQL') { -%>
+<% } -%>
+<% if (springDataEnabled && springDataRepository === 'MySQL') { -%>
   # MySQL
   mysql:
     extends:

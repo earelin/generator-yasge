@@ -2,6 +2,8 @@ management:
   health:
     defaults:
       enabled: true
+    diskspace:
+      enabled: true
 <% if (springDataEnabled && springDataRepositoryType === 'RDMS') { -%>
     db:
       enabled: true
@@ -10,8 +12,9 @@ management:
 <% if (webServer) { -%>
 server:
   port: ${PORT:<%- webserverPort %>}
-  <% if (springDataEnabled) { -%>
+<% } -%>
+<% if (springDataEnabled) { -%>
 spring:
   jpa:
     open-in-view: false
-<% }} -%>
+<% } -%>

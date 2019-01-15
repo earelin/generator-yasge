@@ -1,7 +1,7 @@
 version: '2'
 services:
 
-<% if (springDataRepository === 'MySQL') { -%>
+<% if (springDataEnabled && springDataRepository === 'MySQL') { -%>
   # MySQL
   mysql:
     image: mysql:5.7
