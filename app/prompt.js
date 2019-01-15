@@ -56,8 +56,7 @@ module.exports = function(appname) {
        choices: [
         'ElasticSearch',
         'MySQL',
-        'Redis',
-        'None'
+        'Redis'
       ]
     }, {
       type: 'checkbox',
