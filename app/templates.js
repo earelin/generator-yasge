@@ -71,4 +71,13 @@ module.exports = class {
     ]
   }
 
+  static restServerTemplates(basePackagePath) {
+    return [
+      {
+        template: 'config/SwaggerConfig.java',
+        destination: 'src/main/java/' + basePackagePath + '/config/SwaggerConfig.java'
+      }
+    ]
+  }
+
 }

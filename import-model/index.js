@@ -37,7 +37,7 @@ module.exports = class extends YasgeGenerator {
     }
     
     this.log(chalk.green(Logo.getAscii()));
-    this.log("                  === " + chalk.yellow("Model import") + " ===\n")
+    this.log("                  === " + chalk.yellow("Model import") + " ===")
   }
 
   prompting() {

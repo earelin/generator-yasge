@@ -12,7 +12,7 @@ module.exports = class extends YasgeGenerator {
 
     this.log(chalk.green(Logo.getAscii()));
     this.log("          === "
-        + chalk.yellow("Spring project generation") + " ===\n")
+        + chalk.yellow("Spring project generation") + " ===")
   }
 
   prompting() {
@@ -24,13 +24,19 @@ module.exports = class extends YasgeGenerator {
   }
 
   writing() {
-    this._createBasicStructure()
+    const basePackagePath = this.props.packageName.replace(/\./g, '/')
+
+    this._copyTemplates(Templates.baseTemplates(basePackagePath))
+
     if (this.props.springCloudEnabled) {
       this._copyTemplates(Templates.cloudSupportTemplates())
     }
     if (this.props.springDataEnabled
           && this.props.springDataRepositoryType === 'RDMS') {
       this._copyTemplates(Templates.rdmsTemplates())
+    }
+    if (this.props.components.includes('REST Server')) {
+      this._copyTemplates(Templates.restServerTemplates(basePackagePath))
     }
   }
 
@@ -68,11 +74,6 @@ module.exports = class extends YasgeGenerator {
     }
 
     return options;
-  }
-
-  _createBasicStructure() {
-    const basePackagePath = this.props.packageName.replace(/\./g, '/')
-    this._copyTemplates(Templates.baseTemplates(basePackagePath))
   }
 
 }

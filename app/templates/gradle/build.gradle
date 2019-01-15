@@ -51,7 +51,7 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
 <% if (springCloudEnabled) { -%>
-    compile "org.springframework.retry:spring-retry:${springRetry}"
+    implementation "org.springframework.retry:spring-retry:${springRetry}"
 <% } -%>
 <% if (cloudFeatures.includes('Spring Cloud Config')) { -%>
     implementation "org.springframework.boot:spring-boot-starter-aop"
@@ -62,18 +62,25 @@ dependencies {
 <% } -%>
 <% if (springDataEnabled && springDataRepositoryType === 'RDMS') { -%>
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    compile "org.flywaydb:flyway-core:${flywayVersion}"    
+    implementation "org.flywaydb:flyway-core:${flywayVersion}"    
 <% } -%>
 <% if (springDataEnabled && springDataRepository === 'MySQL') {      -%>
     runtimeOnly "com.h2database:h2:${h2DatabaseVersion}"
     runtimeOnly 'mysql:mysql-connector-java'    
 <% } -%>
-<% if (springDataRepository === 'ElasticSearch') { -%>
+<% if (springDataEnabled && springDataRepository === 'ElasticSearch') { -%>
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+<% } -%>
+<% if (springDataEnabled && springDataRepository === 'Redis') { -%>
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 <% } -%>
 <% if (webServer) { -%>
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jetty'
+<% } -%>
+<% if (components.includes('REST Server')) { -%>
+    implementation "io.springfox:springfox-swagger2:${springfoxSwagger2Version}"
+    implementation "io.springfox:springfox-swagger-ui:${springfoxSwagger2Version}"
 <% } -%>
 <% if (components.includes('Web Server')) { -%>
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
