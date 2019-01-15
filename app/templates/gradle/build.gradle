@@ -1,6 +1,6 @@
 buildscript {    
     repositories {
-        mavenCentral()
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -38,20 +38,27 @@ configurations {
 <% } -%>
 
 repositories {
-    mavenCentral()
+    jcenter()
     maven { url 'https://repo.spring.io/milestone' }
 }
 
 dependencies {
-    compileOnly 'org.springframework.boot:spring-boot-configuration-processor'    
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'    
     checkstyle "com.puppycrawl.tools:checkstyle:${checkstyleToolVersion}"
 
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     runtimeOnly "org.springframework.boot:spring-boot-devtools"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
-<% if (components.includes('Lombok')) { -%>
-    compileOnly 'org.projectlombok:lombok'
+<% if (springCloudEnabled) { -%>
+    compile "org.springframework.retry:spring-retry:${springRetry}"
+<% } -%>
+<% if (cloudFeatures.includes('Spring Cloud Config')) { -%>
+    implementation "org.springframework.boot:spring-boot-starter-aop"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+<% } -%>
+<% if (cloudFeatures.includes('Spring Cloud Netflix Eureka')) { -%>
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
 <% } -%>
 <% if (springDataEnabled && springDataRepositoryType === 'RDMS') { -%>
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -61,6 +68,9 @@ dependencies {
     runtimeOnly "com.h2database:h2:${h2DatabaseVersion}"
     runtimeOnly 'mysql:mysql-connector-java'    
 <% } -%>
+<% if (springDataRepository === 'ElasticSearch') { -%>
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+<% } -%>
 <% if (webServer) { -%>
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jetty'
@@ -68,9 +78,12 @@ dependencies {
 <% if (components.includes('Web Server')) { -%>
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 <% } -%>
+<% if (components.includes('Lombok')) { -%>
+    compileOnly 'org.projectlombok:lombok'
+<% } -%>
 }
 
-<% if (cloudEnv) { -%>
+<% if (springCloudEnabled) { -%>
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"

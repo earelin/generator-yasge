@@ -5,6 +5,9 @@ module.exports = class {
         template: 'gitignore',
         destination: '.gitignore'
       }, {
+        template: 'README.md',
+        destination: 'README.md'
+      }, {
         template: 'travis.yml',
         destination: '.travis.yml'
       }, {
@@ -56,6 +59,9 @@ module.exports = class {
   static rdmsTemplates() {
     return [
       {
+        template: 'docker/init-scripts/mysql.sql',
+        destination: 'docker/conf/mysql-initdb/mysql.sql'
+      }, {
         template: 'rdms/V1.0.0__schema.sql',
         destination: 'src/main/resources/db/migration/V1.0.0__schema.sql'
       }, {

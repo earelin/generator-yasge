@@ -17,13 +17,11 @@ module.exports = function(appname) {
       name: 'projectGroup',
       message: 'Project group',
       store: true,
-      default: 'com-example'
     }, {
       type: 'input',
       name: 'packageName',
       message: 'Enter default package name:',
-      store   : true,
-      default: appname
+      store: true,
     }, {
       type: 'list',
       name: 'javaVersion',
@@ -34,14 +32,13 @@ module.exports = function(appname) {
         '11.0'
       ]
     }, {
-      type: 'list',
-      name: 'cloudSupport',
-      message: 'Cloud support',
+      type: 'checkbox',
+      name: 'cloudFeatures',
+      message: 'Cloud features',
       store: true,
       choices: [
-        'AWS',
-        'Google Cloud',
-        'None'
+        'Spring Cloud Config',
+        'Spring Cloud Netflix Eureka'
       ]
     }, {
       type: 'confirm',
@@ -52,7 +49,7 @@ module.exports = function(appname) {
       type: 'list',
       name: 'springDataRepository',
       message: 'Select a Spring Data repository',
-      when: function(answers) {
+      when: function (answers) {
         return answers.springDataEnabled
       },
       store: true,
@@ -85,6 +82,16 @@ module.exports = function(appname) {
         'REST Server',
         'Web Server'
       ]
+    }, {
+      type: 'input',
+      name: 'webserverPort',
+      message: 'Web server port',
+      when: function (answers) {
+        return answers.components.includes('REST Server')
+            || answers.components.includes('Web Server')
+      },
+      store: true,
+      default: 9000
     }
   ]
 }

@@ -2,10 +2,10 @@ const generateUi = require('./prompt')
 const Templates = require('./templates')
 const Logo = require('../commons/logo')
 const chalk = require('chalk')
-const Generator = require('yeoman-generator')
+const YasgeGenerator = require('../commons/yasge-generator')
 const mkdirp = require('mkdirp')
 
-module.exports = class extends Generator {
+module.exports = class extends YasgeGenerator {
   
   initializing() {
     this.props = {}
@@ -25,7 +25,7 @@ module.exports = class extends Generator {
 
   writing() {
     this._createBasicStructure()
-    if (this.props.cloudEnv) {
+    if (this.props.springCloudEnabled) {
       this._copyTemplates(Templates.cloudSupportTemplates())
     }
     if (this.props.springDataEnabled
@@ -43,11 +43,13 @@ module.exports = class extends Generator {
   }
 
   _proccessOptions(options) {    
-    options.cloudEnv = options.cloudSupport !== 'None'
     options.webServer = options.components.includes('REST Server')
         || options.components.includes('Web Server')
     options.travisJdk = options.javaVersion === '1.8'
-        ? 'oraclejdk8' : 'oraclejdk11'    
+        ? 'oraclejdk8' : 'oraclejdk11'
+    options.dockerBaseImage = options.javaVersion === '1.8'
+        ? 'openjdk:8-jre-alpine' : 'openjdk:11-jre-slim' 
+    options.springCloudEnabled = options.cloudFeatures.length > 0
 
     if (options.springDataEnabled) {
       switch (options.springDataRepository) {
@@ -71,22 +73,6 @@ module.exports = class extends Generator {
   _createBasicStructure() {
     const basePackagePath = this.props.packageName.replace(/\./g, '/')
     this._copyTemplates(Templates.baseTemplates(basePackagePath))
-  }
-
-  _createFolders(folders) {
-    for (let i = 0; i < folders.length; i++) {
-      mkdirp(folders[i])
-    }
-  }
-
-  _copyTemplates(templates) {
-    for (let i = 0; i < templates.length; i++) {
-      this.fs.copyTpl(
-        this.templatePath(templates[i].template),
-        this.destinationPath(templates[i].destination),
-        this.props
-      )
-    }
   }
 
 }

@@ -1,7 +1,16 @@
 version: '2'
 services:
 
+  # Application container
   service:
-    image: "${APP_NAME}:${APP_VERSION}"
+    image: <%- projectName %>:latest
     ports:
-      - "9000"
+      - "8080:<%- webserverPort %>"
+
+<% if (springDataRepository === 'MySQL') { -%>
+  # MySQL
+  mysql:
+    extends:
+      file: docker-compose-infrastructure.yml
+      service: mysql
+<% } -%>

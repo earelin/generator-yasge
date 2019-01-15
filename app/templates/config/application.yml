@@ -9,7 +9,7 @@ management:
 
 <% if (webServer) { -%>
 server:
-  port: ${PORT:8400}
+  port: ${PORT:<%- webserverPort %>}
   <% if (springDataEnabled) { -%>
 spring:
   jpa:

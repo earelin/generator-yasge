@@ -1,5 +1,4 @@
 const Generator = require('yeoman-generator')
-const Logo = require('./logo')
 
 module.exports = class extends Generator {
 
