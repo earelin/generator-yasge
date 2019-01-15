@@ -1,6 +1,8 @@
 # Yasge
 
-Yeat Another Spring Generator is a set of yeoman generators for the Spring Framework.
+[![npm version](https://badge.fury.io/js/generator-yasge.svg)](https://badge.fury.io/js/generator-yasge)
+
+Yea Another Spring Generator is a set of yeoman generators for the Spring Framework.
 
 ## Usage
 
@@ -16,6 +18,24 @@ $ yo yasge
 
 ```
 $ yo yasge:create-class
+```
+
+### Repository generation
+
+```
+$ yo yasge:create-repository
+```
+
+### Service generation
+
+```
+$ yo yasge:create-service
+```
+
+### Controller generation
+
+```
+$ yo yasge:create-controller
 ```
 
 ### Generate artifacts from model

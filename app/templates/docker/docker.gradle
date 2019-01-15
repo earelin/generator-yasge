@@ -1,5 +1,6 @@
 buildscript {
     repositories {
+        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -26,7 +27,7 @@ task buildDocker(type: DockerBuildImage, dependsOn: 'copyDockerFiles') {
     description = "Package application as Docker image"
     group = "Docker"
     inputDir = project.file("${project.buildDir}/docker")
-    tags = ["${project.name}:latest".toString(), "${project.name}:${project.version}".toString()]
+    tags = ["${project.name}:latest".toString()]
 }
 
 buildDocker.dependsOn build

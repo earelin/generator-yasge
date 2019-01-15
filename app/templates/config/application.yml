@@ -2,15 +2,15 @@ management:
   health:
     defaults:
       enabled: true
-<% if (rdms) { -%>
+<% if (springDataEnabled && springDataRepositoryType === 'RDMS') { -%>
     db:
       enabled: true
 <% } -%>
 
 <% if (webServer) { -%>
 server:
-  port: ${PORT:8400}
-  <% if (databaseSystem !== 'None') { -%>
+  port: ${PORT:<%- webserverPort %>}
+  <% if (springDataEnabled) { -%>
 spring:
   jpa:
     open-in-view: false

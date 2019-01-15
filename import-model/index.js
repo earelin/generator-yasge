@@ -18,7 +18,7 @@ module.exports = class extends YasgeGenerator {
       type: String,
       required: false,
       default: "model.yml"
-    });
+    });    
   }
 
   initializing() {
