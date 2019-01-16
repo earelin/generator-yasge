@@ -34,11 +34,11 @@ public class Application {
     } catch (Exception e) {
       LOGGER.warn("The host name could not be determined, using `localhost` as fallback", e);
     }
-    LOGGER.info("%n----------------------------------------------------------%n\t" +
-            "Application '{}' is running! Access URLs:%n\t" +
-            "Local: \t\t{}://localhost:{}%n\t" +
-            "External: \t{}://{}:{}%n\t" +
-            "Profile(s): \t{}%n----------------------------------------------------------",
+    LOGGER.info("\n----------------------------------------------------------\n\t"
+          + "Application '{}' is running! Access URLs:\n\t"
+          + "Local: \t\t{}://localhost:{}\n\t"
+          + "External: \t{}://{}:{}\n\t"
+          + "Profile(s): \t{}\n----------------------------------------------------------",
         env.getProperty("spring.application.name"),
         protocol,
         env.getProperty("server.port"),

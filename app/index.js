@@ -56,6 +56,12 @@ module.exports = class extends YasgeGenerator {
     options.dockerBaseImage = options.javaVersion === '1.8'
         ? 'openjdk:8-jre-alpine' : 'openjdk:11-jre-slim' 
     options.springCloudEnabled = options.cloudFeatures.length > 0
+    options.elasticSearchEnabled = options.springDataEnabled && options.springDataRepository === 'ElasticSearch'
+        || options.components.includes('ElasticSearch')
+
+    if (options.springDataEnabled === undefined) {
+      options.springDataEnabled = false
+    }
 
     if (options.springDataEnabled) {
       switch (options.springDataRepository) {

@@ -3,15 +3,15 @@ module.exports = function(appname) {
   return [
     {
       type: 'input',
+      name: 'projectDescription',
+      message: 'Description',
+      store: true
+    }, {
+      type: 'input',
       name: 'projectName',
       message: 'Name',
       store: true,
       default: appname // Default to current folder name
-    }, {
-      type: 'input',
-      name: 'projectDescription',
-      message: 'Description',
-      store: true
     }, {
       type: 'input',
       name: 'projectGroup',
@@ -20,7 +20,7 @@ module.exports = function(appname) {
     }, {
       type: 'input',
       name: 'packageName',
-      message: 'Enter default package name:',
+      message: 'Enter base package name:',
       store: true,
     }, {
       type: 'list',
@@ -44,12 +44,13 @@ module.exports = function(appname) {
       type: 'confirm',
       name: 'springDataEnabled',
       message: 'Enable Spring Data',
+      store: true,
       default: true
     }, {
       type: 'list',
       name: 'springDataRepository',
       message: 'Select a Spring Data repository',
-      when: function (answers) {
+      when: function (answers) {        
         return answers.springDataEnabled
       },
       store: true,
@@ -59,9 +60,18 @@ module.exports = function(appname) {
         'Redis'
       ]
     }, {
+      type: 'confirm',
+      name: 'springMessagingEnabled',
+      message: 'Enable Spring Messaging',
+      store: true,
+      default: true
+    }, {
       type: 'checkbox',
       name: 'messagingSystem',
       message: 'Select messaging systems',
+      when: function (answers) {        
+        return answers.springMessagingEnabled
+      },
       store: true,
       choices: [
         'AWS Message Queue',
@@ -94,4 +104,3 @@ module.exports = function(appname) {
     }
   ]
 }
-

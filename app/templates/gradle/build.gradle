@@ -7,6 +7,9 @@ buildscript {
     }
     dependencies {
         classpath "gradle.plugin.com.github.spotbugs:spotbugs-gradle-plugin:${gradleSpotBugsVersion}"
+<% if (components.includes('REST Client')) { -%>
+        classpath "io.swagger:swagger-codegen:${swaggerCodegenVersion}"
+<% } -%>
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
@@ -71,12 +74,34 @@ dependencies {
 <% if (springDataEnabled && springDataRepository === 'ElasticSearch') { -%>
     implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 <% } -%>
+<% if (!springDataEnabled && components.includes('ElasticSearch')) { -%>
+    implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchVersion}"
+<% } -%>
 <% if (springDataEnabled && springDataRepository === 'Redis') { -%>
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+<% } -%>
+<% if (springMessagingEnabled && springDataRepository === 'AWS Message Queue') { -%>
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws-messaging'
+<% } -%>
+<% if (springMessagingEnabled && springDataRepository === 'GCP Messaging') { -%>
+    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-pubsub'
 <% } -%>
 <% if (webServer) { -%>
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jetty'
+<% } -%>
+<% if (components.includes('AWS S3')) { -%>
+    implementation "com.amazonaws:aws-java-sdk-s3:${awsVersion}"
+<% } -%>
+<% if (components.includes('GCP Storage')) { -%>
+    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-storage'
+<% } -%>
+<% if (components.includes('Lombok')) { -%>
+    compileOnly 'org.projectlombok:lombok'
+<% } -%>
+<% if (components.includes('REST Client')) { -%>
+    implementation 'org.springframework.cloud:spring-cloud-starter-hystrix'
+    implementation 'org.springframework.cloud:spring-cloud-starter-feign'
 <% } -%>
 <% if (components.includes('REST Server')) { -%>
     implementation "io.springfox:springfox-swagger2:${springfoxSwagger2Version}"
@@ -85,12 +110,9 @@ dependencies {
 <% if (components.includes('Web Server')) { -%>
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 <% } -%>
-<% if (components.includes('Lombok')) { -%>
-    compileOnly 'org.projectlombok:lombok'
-<% } -%>
 }
-
 <% if (springCloudEnabled) { -%>
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
