@@ -50,18 +50,6 @@ module.exports = class {
     ]
   }
 
-  static cloudSupportTemplates() {
-    return [
-      {
-        template: 'config/bootstrap.yml',
-        destination: 'src/main/resources/config/bootstrap.yml'
-      }, {
-        template: 'config/bootstrap.yml',
-        destination: 'src/main/resources/config/bootstrap-dev.yml'
-      }
-    ]
-  }
-
   static rdmsTemplates() {
     return [
       {

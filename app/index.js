@@ -28,9 +28,6 @@ module.exports = class extends YasgeGenerator {
 
     this._copyTemplates(Templates.baseTemplates(basePackagePath))
 
-    if (this.props.springCloudEnabled) {
-      this._copyTemplates(Templates.cloudSupportTemplates())
-    }
     if (this.props.springDataEnabled
           && this.props.springDataRepositoryType === 'RDMS') {
       this._copyTemplates(Templates.rdmsTemplates())
@@ -55,7 +52,6 @@ module.exports = class extends YasgeGenerator {
         ? 'oraclejdk8' : 'oraclejdk11'
     options.dockerBaseImage = options.javaVersion === '1.8'
         ? 'openjdk:8-jre-alpine' : 'openjdk:11-jre-slim' 
-    options.springCloudEnabled = options.cloudFeatures.length > 0
     options.elasticSearchEnabled = options.springDataEnabled && options.springDataRepository === 'ElasticSearch'
         || options.components.includes('ElasticSearch')
 

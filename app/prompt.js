@@ -32,15 +32,6 @@ module.exports = function(appname) {
         '11.0'
       ]
     }, {
-      type: 'checkbox',
-      name: 'cloudFeatures',
-      message: 'Cloud features',
-      store: true,
-      choices: [
-        'Spring Cloud Config',
-        'Spring Cloud Netflix Eureka'
-      ]
-    }, {
       type: 'confirm',
       name: 'springDataEnabled',
       message: 'Enable Spring Data',

@@ -20,8 +20,13 @@ management:
 server:
   port: ${PORT:<%- webserverPort %>}
 <% } -%>
-<% if (springDataEnabled) { -%>
+
 spring:
+  application:
+    name: <%=projectName%>
+  profiles:
+    active: dev
+<% if (springDataEnabled) { -%>
   jpa:
     open-in-view: false
 <% } -%>
