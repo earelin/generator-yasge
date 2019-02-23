@@ -1,7 +1,9 @@
+const chalk = require('chalk')
+
 module.exports = class {
   // ASCII font Modular
-  static getAscii() {
-    return ` 
+  static logo() {
+    return chalk.green(` 
      __   __  _______  _______  _______  _______ 
     |  | |  ||   _   ||       ||       ||       |
     |  |_|  ||  |_|  ||  _____||    ___||    ___|
@@ -9,6 +11,14 @@ module.exports = class {
     |_     _||       ||_____  ||   ||  ||    ___|
       |   |  |   _   | _____| ||   |_| ||   |___ 
       |___|  |__| |__||_______||_______||_______|
-`
+`)
+  }
+
+  static title(title) {
+    return `     === ${chalk.yellow(title)} ===`
+  }
+
+  static bye() {
+    return chalk.green("Bye!")
   }
 }

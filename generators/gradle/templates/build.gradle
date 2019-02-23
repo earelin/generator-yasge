@@ -1,0 +1,30 @@
+buildscript {    
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        mavenCentral()
+    }
+    dependencies {
+        
+    }
+}
+
+group = '<%- groupId %>'
+description = '<%- description %>'
+
+sourceCompatibility = <%- javaVersion %>
+targetCompatibility = <%- javaVersion %>
+
+compileJava.options*.compilerArgs = ["-Xlint:all"]
+compileTestJava.options*.compilerArgs = ["-Xlint:all"]
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+<% gradle.dependencies.forEach(dependency => {-%>
+    <%- dependency.type %> '<%- dependency.group %>:<%- dependency.id %><%- dependency.version ? ':' + dependency.version : '' %>'
+<% }) -%>
+}

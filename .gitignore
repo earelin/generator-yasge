@@ -11,8 +11,6 @@ hs_err_pid*
 /node_modules/
 
 ### Visual studio code ###
-.idea
-*.iml
 .project
 /.settings/
 .classpath
