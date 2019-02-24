@@ -35,7 +35,6 @@ class Gradle {
 
   getDependencies() {
     const mergedDependencies = this.getDependenciesFromFeatures()
-        .concat(this.getPluginDependencies())
         .concat(this.dependencies)
     const versionedDependencies = this._setDependenciesLastVersion(mergedDependencies)
     return Promise.all(versionedDependencies).then(dependencies => dependencies)
@@ -44,7 +43,7 @@ class Gradle {
   getDependenciesFromFeatures() {
     const dependencies = this.features
       .map(feature => {
-        if (featureTemplates[feature].dependencies) {
+        if (featureTemplates[feature] && featureTemplates[feature].dependencies) {
           return featureTemplates[feature].dependencies
         }
       }).filter(dependency => dependency !== null && dependency !== undefined)
@@ -52,22 +51,10 @@ class Gradle {
     return [].concat.apply([], dependencies)
   }
 
-  getPluginDependencies() {
-    const dependencies = this.features
-       .map(feature => {
-         if (featureTemplates[feature].plugins) {
-            return featureTemplates[feature].plugins
-              .map(plugin => plugin.dependencies)            
-         }
-       })
-    return [].concat.apply([], [].concat.apply([], dependencies))
-      .filter(dependency => dependency !== null && dependency !== undefined)
-  }
-
   getPlugins() {
     const plugins = [].concat.apply([], this.features
       .map(feature => {
-        if (featureTemplates[feature].plugins) {
+        if (featureTemplates[feature] && featureTemplates[feature].plugins) {
           return featureTemplates[feature].plugins.map(plugin => plugin)
         }
       }).filter(plugin => plugin !== null && plugin !== undefined))
@@ -79,7 +66,7 @@ class Gradle {
   getConfigurations() {
     const configurations = [].concat.apply([], this.features
       .map(feature => {
-        if (featureTemplates[feature].configuration) {
+        if (featureTemplates[feature] && featureTemplates[feature].configuration) {
           return featureTemplates[feature].configuration
         }
       }).filter(configuration => configuration !== null && configuration !== undefined))
@@ -89,7 +76,7 @@ class Gradle {
   getTemplates() {
     const templateNames = [].concat.apply([], this.features
       .map(feature => {
-        if (featureTemplates[feature].templates) {
+        if (featureTemplates[feature] && featureTemplates[feature].templates) {
           return featureTemplates[feature].templates
         }
       }).filter(templates => templates !== null && templates !== undefined))
@@ -105,7 +92,7 @@ class Gradle {
   getProperties() {
     const properties = [].concat.apply([], this.features
       .map(feature => {
-        if (featureTemplates[feature].properties) {
+        if (featureTemplates[feature] && featureTemplates[feature].properties) {
           return featureTemplates[feature].properties
         }
       }).filter(properties => properties !== null && properties !== undefined))

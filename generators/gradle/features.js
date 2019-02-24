@@ -50,7 +50,13 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
         xml.enabled = false
         html.enabled = true
     }
-}`
+}`,
+    dependencies: [{
+      type: "spotbugsPlugins",
+      group: "com.h3xstream.findsecbugs",
+      id: "findsecbugs-plugin",
+      lastVersion: true
+    }]
   },
   java: {
     plugins: [{
@@ -82,5 +88,8 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
       name: 'mavenPassword',
       config: 'publishRepositoryPassword'
     }]
- },
+  },
+  'spring-boot': {
+    
+  }
 }

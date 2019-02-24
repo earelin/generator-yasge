@@ -23,13 +23,13 @@ module.exports = class LibraryGenerator extends YasgeGenerator {
 
   configuring() {
     if (this.libraryProjectType) {
-      const managerFeatures = this.config.get("managerFeatures")
-      managerFeatures.push('java-library')
+      const features = this.config.get("features")
+      features.push('java-library')
       
 
       this.config.set("publishRepository", this.answers.publishRepository)
       if (this.answers.publishRepository) {
-        managerFeatures.push('maven-publish')
+        features.push('maven-publish')
         this.config.set("publishRepositoryReleasesUrl", this.answers.publishRepositoryReleasesUrl)
         this.config.set("publishRepositorySnapshotsUrl", this.answers.publishRepositorySnapshotsUrl)
         this.config.set("publishRepositoryAuth", this.answers.publishRepositoryAuth)
@@ -39,7 +39,7 @@ module.exports = class LibraryGenerator extends YasgeGenerator {
           this.config.set("publishRepositoryPassword", this.answers.publishRepositoryPassword)
         }
       }
-      this.config.set("managerFeatures", managerFeatures)
+      this.config.set("features", features)
     }
   }
 }

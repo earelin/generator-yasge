@@ -1,7 +1,7 @@
 const generateUi = require('./prompt')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const Branding = require('../../commons/branding')
-const SpringDependencies = require('./dependencies')
+const features = require('./features')
 
 module.exports = class SpringGenerator extends YasgeGenerator {
   
@@ -15,24 +15,22 @@ module.exports = class SpringGenerator extends YasgeGenerator {
   }
 
   prompting() {
-    if (this.config.get('projectType') === 'spring') {
+    if (this.config.get('type') === 'spring') {
       this.springProjectType = true
       return this.prompt(generateUi())
-        .then(answers => this.answers = answers)
+        .then(answers => {
+          const features = this.config.get('features').concat(answers.features)
+          features.push('spring-boot')
+          this.config.set('features', features)
+          this.answers = answers}
+        )
     }
   }
 
   configuring() {
     if (this.springProjectType) {
-      const projectManagerFeatures = this.config.get('projectManagerFeatures')
-          .push("spring-boot")
-      this.config.set("projectManagerFeatures", projectManagerFeatures)
-
-      const springFeatures = this.answers.springFeatures
-      this.config.set("springFeatures", springFeatures)
-
       const dependencies = this.config.get('dependencies')
-      this.config.set('dependencies', dependencies.concat(SpringDependencies.fromFeatures(springFeatures)))
+      this.config.set('dependencies', dependencies.concat(this._getDependenciesFromFeatures(features)))
     }
   }
 }

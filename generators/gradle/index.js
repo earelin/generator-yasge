@@ -30,12 +30,12 @@ module.exports = class GradleGenerator extends YasgeGenerator {
     if (this.config.get('manager') === 'gradle') {
       this.gradleEnabled = true
 
-      const managerFeatures = this.config.get('managerFeatures')
-      managerFeatures.push('java')
-      this.config.set('managerFeatures', managerFeatures)
+      const features = this.config.get('features')
+      features.push('java')
+      this.config.set('features', features)
       const dependencies = this.config.get('dependencies')      
 
-      return Gradle.from(managerFeatures, dependencies, this.config.getAll())
+      return Gradle.from(features, dependencies, this.config.getAll())
         .then(gradle => this.gradle = gradle)
     }
   }

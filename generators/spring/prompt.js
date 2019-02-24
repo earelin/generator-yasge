@@ -4,14 +4,14 @@ module.exports = function() {
   return [
     {
       type: 'checkbox',
-      name: 'springFeatures',
+      name: 'features',
       message: 'Spring features',
       store: true,
       choices: [
         { value: 'web', name: 'Spring MVC' },
         { value: 'reactive-web', name: 'Spring WebFlux' },
         new inquirer.Separator(),
-        { value: 'data', name: 'Spring Data' },
+        { value: 'spring-data', name: 'Spring Data' },
         new inquirer.Separator(),   
         { value: 'h2', name: 'H2' },
         { value: 'mysql', name: 'MySQL' },

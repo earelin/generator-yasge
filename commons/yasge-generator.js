@@ -19,6 +19,10 @@ module.exports = class extends Generator {
     }
   }
 
+  _isFeatureEnabled(feature) {
+    return this.config.get('features').includes(feature)
+  }
+
   _createFolders(folders) {
     for (let i = 0; i < folders.length; i++) {
       mkdirp(folders[i])
@@ -53,5 +57,14 @@ module.exports = class extends Generator {
     })
   }
 
-
+  _getDependenciesFromFeatures(features) {
+    return this.config.get('features')
+      .map(feature => {
+        if (features[feature]) {
+          return features[feature].dependencies
+        }
+      })
+      .filter(dependencies => dependencies !== null && dependencies !== undefined)
+      .reduce((accumulatedDependencies, dependencies) => accumulatedDependencies.concat(dependencies))
+  }
 }
