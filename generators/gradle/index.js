@@ -36,16 +36,17 @@ module.exports = class GradleGenerator extends YasgeGenerator {
       const dependencies = this.config.get('dependencies')      
 
       return Gradle.from(managerFeatures, dependencies, this.config.getAll())
-        .then(gradle => this.config.set('gradle', gradle))
+        .then(gradle => this.gradle = gradle)
     }
   }
 
   writing() {
     if (this.gradleEnabled) {
-      this._copyTemplates(Templates.baseTemplates())
+      const templateParameters = this.config.getAll()
+      templateParameters.gradle = this.gradle
 
-      const gradle = this.config.get('gradle')
-      this._copyTemplates(gradle.templates)
+      this._copyTemplatesWithParameters(Templates.baseTemplates(), templateParameters)
+      this._copyTemplatesWithParameters(this.gradle.templates, templateParameters)
     }
   }
 

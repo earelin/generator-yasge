@@ -35,6 +35,16 @@ module.exports = class extends Generator {
     }
   }
 
+  _copyTemplatesWithParameters(templates, parameters) {
+    for (let i = 0; i < templates.length; i++) {
+      this.fs.copyTpl(
+        this.templatePath(templates[i].template),
+        this.destinationPath(templates[i].destination),
+        parameters
+      )
+    }
+  }
+
   _downloadFile(source, destination) {
     return axios.get(source).then(response => {
       fs.writeFile(destination, response.data, 'utf8', () => {
