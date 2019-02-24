@@ -2,7 +2,8 @@ const generateUi = require('./prompt')
 const Templates = require('./templates')
 const Branding = require('../../commons/branding')
 const YasgeGenerator = require('../../commons/yasge-generator')
-const features = require('./features')
+const appFeatures = require('./features')
+const _ = require('lodash')
 
 module.exports = class App extends YasgeGenerator {
   
@@ -16,7 +17,7 @@ module.exports = class App extends YasgeGenerator {
     }
 
     this.composeWith(require.resolve('../library'), {composed: true})
-    this.composeWith(require.resolve('../spring'), {composed: true})
+    this.composeWith(require.resolve('../spring-boot'), {composed: true})
     this.composeWith(require.resolve('../gradle'), {composed: true})
     this.composeWith(require.resolve('../maven'), {composed: true})
   }
@@ -34,6 +35,10 @@ module.exports = class App extends YasgeGenerator {
           'test'
         ])
         this.config.set("features", features)
+
+        const dependencies = this._getDependenciesFromFeatures(appFeatures)
+        this.config.set("dependencies", dependencies)
+
         this.answers = answers
       })
   }
@@ -46,16 +51,12 @@ module.exports = class App extends YasgeGenerator {
     this.config.set("basePackage", this.answers.basePackage)
     this.config.set("javaVersion", this.answers.javaVersion)    
     this.config.set("basePackagePath", this.answers.basePackage.replace(/\./g, '/'))
-    
-    const dependencies = this.config.get("dependencies")
-        .concat(this._getDependenciesFromFeatures(features))
-    this.config.set("dependencies", dependencies)
   }
 
   writing() {
     this._copyTemplates(Templates.baseTemplates())
 
-    return this._downloadFile("https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml", "checkstyle.xml")
+    return this._downloadFile("https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml", "checkstyle.xml")
   }
 
   end() {

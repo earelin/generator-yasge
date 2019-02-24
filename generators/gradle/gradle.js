@@ -1,5 +1,6 @@
 const featureTemplates = require('./features')
 const DependenciesService = require('../../commons/versions-service')
+const _ = require('lodash')
 
 class Gradle {
 
@@ -7,9 +8,9 @@ class Gradle {
     this.dependenciesService = new DependenciesService()
   }
 
-  static from(projectManagerFeatures, dependencies, config) {
+  static from(features, dependencies, config) {
     const gradle = new Gradle()
-    gradle.features = projectManagerFeatures
+    gradle.features = features
     gradle.dependencies = dependencies
     gradle.config = config
     return gradle.build()
@@ -21,14 +22,16 @@ class Gradle {
       this.getPlugins(),
       this.getConfigurations(),
       this.getTemplates(),
-      this.getProperties()
+      this.getProperties(),
+      this.getExcludedDependencies()
     ]).then(result => {      
       return {
         dependencies: result[0],
         plugins: result[1],
         configurations: result[2],
         templates: result[3],
-        properties: result[4]
+        properties: result[4],
+        excludedDependencies: result[5]
       }
     })
   }
@@ -41,14 +44,12 @@ class Gradle {
   }
 
   getDependenciesFromFeatures() {
-    const dependencies = this.features
+    return _.flatten(_.compact(this.features
       .map(feature => {
         if (featureTemplates[feature] && featureTemplates[feature].dependencies) {
           return featureTemplates[feature].dependencies
         }
-      }).filter(dependency => dependency !== null && dependency !== undefined)
-
-    return [].concat.apply([], dependencies)
+      })))
   }
 
   getPlugins() {
@@ -103,6 +104,16 @@ class Gradle {
         value: this.config[property.config]
       }})
     return Promise.resolve(calculatedProperties)
+  }
+
+  getExcludedDependencies() {
+    const excludedDependencies = _.compact(_.flatten(this.dependencies
+      .map(dependency => {
+        if (dependency.exclude) {
+          return dependency.exclude          
+        }
+      })))
+    return Promise.resolve(excludedDependencies)
   }
 
   _setPluginLastVersion(plugins) {

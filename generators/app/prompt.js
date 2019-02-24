@@ -50,15 +50,6 @@ module.exports = function() {
       ],
       default: 'gradle'
     }, {
-      type: 'list',
-      name: 'type',
-      message: 'Project type',
-      store: true,
-      choices: [
-        { value: 'library', name: 'Java library' },
-        { value: 'spring', name: 'Spring framework' }
-      ]
-    }, {
       type: 'checkbox',
       name: 'features',
       message: 'Features',
@@ -67,6 +58,15 @@ module.exports = function() {
         { value: 'lombok', name: 'Lombok' }
       ],
       default: ['lombok']
+    }, {
+      type: 'list',
+      name: 'type',
+      message: 'Project type',
+      store: true,
+      choices: [
+        { value: 'library', name: 'Java library' },
+        { value: 'spring-boot', name: 'Spring Boot' }
+      ]
     }
   ]
 }

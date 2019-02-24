@@ -90,6 +90,12 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     }]
   },
   'spring-boot': {
-    
+    plugins: [{
+      id: "org.springframework.boot",
+      lastVersion: true
+    }, {
+      id: "io.spring.dependency-management",
+      lastVersion: true
+    }]
   }
 }

@@ -1,0 +1,17 @@
+management:
+  health:
+    defaults:
+      enabled: true
+    diskspace:
+      enabled: true
+
+<% if (webServer) { -%>
+server:
+  port: ${PORT:<%- webServerPort %>}
+<% } -%>
+
+spring:
+  application:
+    name: <%=artifactId%>
+  profiles:
+    active: dev

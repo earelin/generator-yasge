@@ -33,6 +33,7 @@ module.exports = class GradleGenerator extends YasgeGenerator {
       const features = this.config.get('features')
       features.push('java')
       this.config.set('features', features)
+
       const dependencies = this.config.get('dependencies')      
 
       return Gradle.from(features, dependencies, this.config.getAll())

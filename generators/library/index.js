@@ -42,4 +42,11 @@ module.exports = class LibraryGenerator extends YasgeGenerator {
       this.config.set("features", features)
     }
   }
+
+  install() {
+    this._createFolders([
+      'src/main/java/' + this.config.get('basePackagePath'),
+      'src/test/java/' + this.config.get('basePackagePath')
+    ])
+  }
 }

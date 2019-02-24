@@ -65,6 +65,6 @@ module.exports = class extends Generator {
         }
       })
       .filter(dependencies => dependencies !== null && dependencies !== undefined)
-      .reduce((accumulatedDependencies, dependencies) => accumulatedDependencies.concat(dependencies))
+      .reduce((accumulatedDependencies, dependencies) => accumulatedDependencies.concat(dependencies), [])
   }
 }

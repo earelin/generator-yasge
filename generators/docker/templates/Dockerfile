@@ -3,6 +3,6 @@ ENV JAVA_OPTS="-server -Djgroups.tcp.address=NON_LOOPBACK -Djava.net.preferIPv4S
 
 CMD java ${JAVA_OPTS} -Djava.security.egd=file:/dev/./urandom -jar /app.jar
 <% if (webServer) { -%>
-EXPOSE <%- webserverPort %>
+EXPOSE <%- webServerPort %>
 <% } -%>
 ADD *.jar /app.jar

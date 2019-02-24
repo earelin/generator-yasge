@@ -18,8 +18,16 @@ compileJava.options*.compilerArgs = ["-Xlint:all"]
 compileTestJava.options*.compilerArgs = ["-Xlint:all"]
 
 repositories {
-  mavenCentral()
+    mavenCentral()
 }
+
+<% if (gradle.excludedDependencies) {-%>
+configurations {
+<% gradle.excludedDependencies.forEach(dependency => {-%>
+    compile.exclude module: "<%- dependency %>"
+<% }) -%>
+}
+<% } -%>
 
 dependencies {
 <% gradle.dependencies.forEach(dependency => {-%>

@@ -2,34 +2,12 @@ version: '2'
 services:
 
   # Application container
-  service:
-    image: <%- projectName %>:latest
+  <%- artifactId %>:
+    image: <%- artifactId %>:latest
 <% if (webServer) { -%>
     ports:
-      - "8080:<%- webserverPort %>"
-<% } -%>
-<% if (elasticSearchEnabled) { -%>
-  # ElasticSearch
-  elastic-search:
-    extends:
-      file: docker-compose-infrastructure.yml
-      service: elastic-search
-<% } -%>
-<% if (springDataEnabled && springDataRepository === 'MySQL') { -%>
-  # MySQL
-  mysql:
-    extends:
-      file: docker-compose-infrastructure.yml
-      service: mysql
-<% } -%>
-
-volumes:
-<% if (springDataEnabled && springDataRepository === 'MySQL') { -%>
-  es-data:
-<% } -%>
-<% if (elasticSearchEnabled) { -%>
-  mysql-data:
+      - "<%- webServerPort %>:<%- webServerPort %>"
 <% } -%>
 
 network:
-  <%- projectName %>:
+  <%- artifactId %>:
