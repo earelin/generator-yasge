@@ -40,3 +40,6 @@ bin
 /dist/
 /nbdist/
 /.nb-gradle/
+
+### npm ###
+/reports/

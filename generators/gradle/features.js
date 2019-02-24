@@ -1,13 +1,7 @@
 module.exports = {  
   checkstyle: {
     plugins: [{
-      id: 'checkstyle'   
-    }],
-    dependencies: [{
-      type: "checkstyle",
-      group: "com.puppycrawl.tools",
-      id: "checkstyle",
-      automaticVersion: true
+      id: 'checkstyle',
     }],
     configuration: `
 checkstyle {
@@ -17,11 +11,7 @@ checkstyle {
   cpd: {
     plugins: [{
       id: 'de.aaschmid.cpd',
-      dependencies: [{
-        group: "de.aaschmid",
-        id: "gradle-cpd-plugin",
-        automaticVersion: true
-      }]
+      lastVersion: true
     }],
     configuration: `
 cpd {
@@ -45,17 +35,7 @@ check.dependsOn jacocoTestReport`
   spotbugs: {
     plugins: [{
       id: 'com.github.spotbugs',
-      dependencies: [{
-        group: "gradle.plugin.com.github.spotbugs",
-        id: "spotbugs-gradle-plugin",
-        automaticVersion: true
-      }]
-    }],
-    dependencies: [{
-      type: "spotbugsPlugins",
-      group: "com.h3xstream.findsecbugs",
-      id: "findsecbugs-plugin",
-      automaticVersion: true
+      lastVersion: true
     }],
     configuration: `
 spotbugs {
@@ -72,14 +52,35 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
     }
 }`
   },
+  java: {
+    plugins: [{
+      id: "java"
+    }]
+  },
   'java-library': {
-     plugins: [{
-       id: "java-library"
-     }]
+    plugins: [{
+      id: "java-library"
+    }]
   },
   'maven-publish': {
     plugins: [{
       id: "maven"
+    }],
+    templates: [
+      'maven.gradle'
+    ],
+    properties: [{
+      name: 'mavenReleasesUrl',
+      config: 'publishRepositoryReleasesUrl'
+    }, {
+      name: 'mavenSnapshotsUrl',
+      config: 'publishRepositorySnapshotsUrl'
+    }, {
+      name: 'mavenUser',
+      config: 'publishRepositoryUser'
+    }, {
+      name: 'mavenPassword',
+      config: 'publishRepositoryPassword'
     }]
  },
 }

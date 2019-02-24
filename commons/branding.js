@@ -15,7 +15,12 @@ module.exports = class {
   }
 
   static title(title) {
-    return `     === ${chalk.yellow(title)} ===`
+    let padding = 0
+    if (title.length < 50) {
+      padding = Math.round((50 - (title.length + 8)) / 2)
+    }
+    const paddingString = ' '.repeat(padding)
+    return `${paddingString}=== ${chalk.yellow(title)} ===${paddingString}\n`
   }
 
   static bye() {

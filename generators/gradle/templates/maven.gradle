@@ -1,0 +1,12 @@
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "${mavenReleasesUrl}") {
+                authentication(userName: mavenUser, password: mavenPassword)
+            }
+            snapshotRepository(url: "${mavenSnapshotsUrl}") {
+                authentication(userName: mavenUser, password: mavenPassword)
+            }
+        }
+    }
+}

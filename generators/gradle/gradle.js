@@ -1,5 +1,5 @@
 const featureTemplates = require('./features')
-const DependenciesService = require('../../commons/maven-service')
+const DependenciesService = require('../../commons/versions-service')
 
 class Gradle {
 
@@ -7,29 +7,37 @@ class Gradle {
     this.dependenciesService = new DependenciesService()
   }
 
-  static from(projectManagerFeatures, dependencies) {
+  static from(projectManagerFeatures, dependencies, config) {
     const gradle = new Gradle()
     gradle.features = projectManagerFeatures
     gradle.dependencies = dependencies
+    gradle.config = config
     return gradle.build()
   }
 
   build() {
     return Promise.all([
       this.getDependencies(),
-      this.getPluginDependencies()
-    ]).then(result => {
+      this.getPlugins(),
+      this.getConfigurations(),
+      this.getTemplates(),
+      this.getProperties()
+    ]).then(result => {      
       return {
         dependencies: result[0],
-        pluginDependencies: result[1]
+        plugins: result[1],
+        configurations: result[2],
+        templates: result[3],
+        properties: result[4]
       }
     })
   }
 
   getDependencies() {
     const mergedDependencies = this.getDependenciesFromFeatures()
+        .concat(this.getPluginDependencies())
         .concat(this.dependencies)
-    const versionedDependencies = this._versionCalculations(mergedDependencies)
+    const versionedDependencies = this._setDependenciesLastVersion(mergedDependencies)
     return Promise.all(versionedDependencies).then(dependencies => dependencies)
   }
 
@@ -52,25 +60,81 @@ class Gradle {
               .map(plugin => plugin.dependencies)            
          }
        })
-    const pluginDependencies = [].concat.apply([], [].concat.apply([], dependencies))
-       .filter(dependency => dependency !== null && dependency !== undefined)
-    const versionedDependencies = this._versionCalculations(pluginDependencies)
-    return Promise.all(versionedDependencies).then(dependencies => dependencies)
+    return [].concat.apply([], [].concat.apply([], dependencies))
+      .filter(dependency => dependency !== null && dependency !== undefined)
   }
 
-  getPluginIds() {
-    return this.features
+  getPlugins() {
+    const plugins = [].concat.apply([], this.features
       .map(feature => {
         if (featureTemplates[feature].plugins) {
-          return featureTemplates[feature].plugins.map(plugin => plugin.id)
+          return featureTemplates[feature].plugins.map(plugin => plugin)
         }
-      })
+      }).filter(plugin => plugin !== null && plugin !== undefined))
+
+    const versionedPlugins = this._setPluginLastVersion(plugins)
+    return Promise.all(versionedPlugins).then(plugins => plugins)
   }
 
-  _versionCalculations(dependencies) {
+  getConfigurations() {
+    const configurations = [].concat.apply([], this.features
+      .map(feature => {
+        if (featureTemplates[feature].configuration) {
+          return featureTemplates[feature].configuration
+        }
+      }).filter(configuration => configuration !== null && configuration !== undefined))
+    return Promise.resolve(configurations)
+  }
+
+  getTemplates() {
+    const templateNames = [].concat.apply([], this.features
+      .map(feature => {
+        if (featureTemplates[feature].templates) {
+          return featureTemplates[feature].templates
+        }
+      }).filter(templates => templates !== null && templates !== undefined))
+
+    const templates = templateNames.map(name => {
+      return {
+        template: name,
+        destination: 'gradle/' + name
+      }})
+    return Promise.resolve(templates)
+  }
+
+  getProperties() {
+    const properties = [].concat.apply([], this.features
+      .map(feature => {
+        if (featureTemplates[feature].properties) {
+          return featureTemplates[feature].properties
+        }
+      }).filter(properties => properties !== null && properties !== undefined))
+
+    const calculatedProperties = properties.map(property => {
+      return {
+        name: property.name,
+        value: this.config[property.config]
+      }})
+    return Promise.resolve(calculatedProperties)
+  }
+
+  _setPluginLastVersion(plugins) {
+    return plugins.map(plugin => {
+      if (plugin.lastVersion) {
+        return this.dependenciesService.getGradlePluginLastVersion(plugin)
+          .then(version => {
+            plugin.version = version
+            return plugin
+          })
+      }
+      return Promise.resolve(plugin)
+    })
+  }
+
+  _setDependenciesLastVersion(dependencies) {
     return dependencies.map(dependency => {
-      if (dependency.automaticVersion) {
-        return this.dependenciesService.getLatestVersion(dependency)
+      if (dependency.lastVersion) {
+        return this.dependenciesService.getDependencyLastVersion(dependency)
           .then(version => {
             dependency.version = version
             return dependency
@@ -78,20 +142,6 @@ class Gradle {
       }
       return Promise.resolve(dependency)
     })
-    // let versionedDependencies = []
-    // for (let i = 0; dependencies.length > i; i++) {
-    //   const dependency = dependencies[i]
-    //   if (dependency.automaticVersion) {
-    //     this.dependenciesService.getLatestVersion(dependency)
-    //       .then(version => {
-    //         dependency.version = version
-    //         versionedDependencies.push(dependency)
-    //       })
-    //   } else {
-    //     versionedDependencies.push(dependency)
-    //   }
-    // }
-    // return versionedDependencies
   }
 }
 

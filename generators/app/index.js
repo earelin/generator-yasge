@@ -46,7 +46,7 @@ module.exports = class App extends YasgeGenerator {
 
   writing() {
     this.log('Application writing')
-    this._copyTemplates(Templates.baseTemplates(this.config.getAll()))
+    this._copyTemplates(Templates.baseTemplates())
 
     return this._downloadFile("https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml", "checkstyle.xml")
   }

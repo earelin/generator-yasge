@@ -1,14 +1,12 @@
-buildscript {    
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-        mavenCentral()
-    }
-    dependencies {
-        
-    }
+plugins {
+<% gradle.plugins.forEach(plugin => {-%>
+    id '<%- plugin.id %>'<% if (plugin.version) { -%> version '<%- plugin.version %>'<% } %>
+<% }) -%>
 }
+
+<% gradle.templates.forEach(template => {-%>
+apply from: '<%- template.destination %>'
+<% }) -%>
 
 group = '<%- groupId %>'
 description = '<%- description %>'
@@ -28,3 +26,7 @@ dependencies {
     <%- dependency.type %> '<%- dependency.group %>:<%- dependency.id %><%- dependency.version ? ':' + dependency.version : '' %>'
 <% }) -%>
 }
+
+<% gradle.configurations.forEach(configuration => {-%>
+<%- configuration %>
+<% }) -%>

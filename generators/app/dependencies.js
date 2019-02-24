@@ -5,7 +5,7 @@ module.exports = class AppDependencies {
         type: "spotbugsPlugins",
         group: "com.h3xstream.findsecbugs",
         id: "findsecbugs-plugin",
-        automaticVersion: true
+        lastVersion: true
       }, {
         type: "testImplementation",
         group: "junit",
@@ -15,7 +15,7 @@ module.exports = class AppDependencies {
         type: "testImplementation",
         group: "org.assertj",
         id: "assertj-core",
-        automaticVersion: true
+        lastVersion: true
       }
     ]
   }
@@ -36,12 +36,12 @@ module.exports = class AppDependencies {
         type: "compileOnly",
         group: "org.projectlombok",
         id: "lombok",
-        automaticVersion: true
+        lastVersion: true
       }, {
         type: "annotationProcessor",
         group: "org.projectlombok",
         id: "lombok",
-        automaticVersion: true
+        lastVersion: true
       }
     ]
   }

@@ -12,12 +12,6 @@ class SpringDependencies {
       }
     ]
   }
-
-  static fromFeatures(springFeatures) {
-    let dependencies = SpringDependencies.base()
-
-    return dependencies
-  }
 }
 
 module.exports = SpringDependencies

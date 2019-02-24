@@ -1,7 +1,7 @@
 // const generateUi = require('./prompt')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const Branding = require('../../commons/branding')
-const DependenciesService = require('../../commons/maven-service')
+const DependenciesService = require('../../commons/versions-service')
 const Gradle = require('./gradle')
 const fs = require('fs')
 const Templates = require('./templates')
@@ -31,36 +31,39 @@ module.exports = class GradleGenerator extends YasgeGenerator {
       this.gradleEnabled = true
 
       const managerFeatures = this.config.get('managerFeatures')
+      managerFeatures.push('java')
+      this.config.set('managerFeatures', managerFeatures)
       const dependencies = this.config.get('dependencies')      
 
-      return Gradle.from(managerFeatures, dependencies)
-        .then(gradle => this.config.set('gradle', gradle))      
+      return Gradle.from(managerFeatures, dependencies, this.config.getAll())
+        .then(gradle => this.config.set('gradle', gradle))
     }
   }
 
   writing() {
-    this.log()
-    this.log('Gradle writing')
     if (this.gradleEnabled) {
       this._copyTemplates(Templates.baseTemplates())
+
+      const gradle = this.config.get('gradle')
+      this._copyTemplates(gradle.templates)
     }
   }
 
   install() {
     this.log('Gradle installing')
     if (this.gradleEnabled && !this._isWrapperInstalled()) {
-      this.spawnCommandSync('gradle', ['wrapper'])      
+      this.spawnCommandSync('gradle', ['--warning-mode=none', 'wrapper'])      
     }
-    return this.spawnCommand('sh', [this.destinationPath('gradlew'), 'check'])
+    this.spawnCommandSync('sh', [this.destinationPath('gradlew'), '--warning-mode=none', 'check'])
   }
 
   _isWrapperInstalled() {
     let wrapperInstalled
     try {
-      wrapperInstalled = fs.accessSync(this.destinationPath('gradle/wrapper/gradle-wrapper.jar'))
-        && fs.accessSync(this.destinationPath('gradle/wrapper/gradle-wrapper.properties'))
-        && fs.accessSync(this.destinationPath('gradlew'))
-        && fs.accessSync(this.destinationPath('gradlew.bat'))
+      wrapperInstalled = fs.existsSync(this.destinationPath('gradle/wrapper/gradle-wrapper.jar'))
+        && fs.existsSync(this.destinationPath('gradle/wrapper/gradle-wrapper.properties'))
+        && fs.existsSync(this.destinationPath('gradlew'))
+        && fs.existsSync(this.destinationPath('gradlew.bat'))      
     } catch(e) {
       wrapperInstalled = false
     }
