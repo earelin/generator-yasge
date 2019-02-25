@@ -9,7 +9,7 @@ const Templates = require('./templates')
 /**
  * Gradle project generation
  */
-module.exports = class GradleGenerator extends YasgeGenerator {
+class GradleGenerator extends YasgeGenerator {
 
   constructor(args, opts) {
     super(args, opts)
@@ -31,9 +31,6 @@ module.exports = class GradleGenerator extends YasgeGenerator {
       this.gradleEnabled = true
 
       const features = this.config.get('features')
-      features.push('java')
-      this.config.set('features', features)
-
       const dependencies = this.config.get('dependencies')      
 
       return Gradle.from(features, dependencies, this.config.getAll())
@@ -52,11 +49,12 @@ module.exports = class GradleGenerator extends YasgeGenerator {
   }
 
   install() {
-    this.log('Gradle installing')
-    if (this.gradleEnabled && !this._isWrapperInstalled()) {
-      this.spawnCommandSync('gradle', ['--warning-mode=none', 'wrapper'])      
+    if (this.gradleEnabled) {
+      if (!this._isWrapperInstalled()) {
+        this.spawnCommandSync('gradle', ['--warning-mode=none', 'wrapper'])      
+      }
+      this.spawnCommandSync('sh', [this.destinationPath('gradlew'), '--warning-mode=none', 'check'])
     }
-    this.spawnCommandSync('sh', [this.destinationPath('gradlew'), '--warning-mode=none', 'check'])
   }
 
   _isWrapperInstalled() {
@@ -72,3 +70,5 @@ module.exports = class GradleGenerator extends YasgeGenerator {
     return wrapperInstalled
   }
 }
+
+module.exports = GradleGenerator

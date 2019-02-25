@@ -1,0 +1,57 @@
+pipeline{
+    agent any
+    stages{
+        stage('Cleanup') {
+            steps {
+                sh 'sh <%- manager === 'gradle' ? 'gradlew clean' : 'mvnw clean' %>'
+            }
+        }
+
+        stage('Static code analysis and unit testing') {
+            steps {
+                sh 'sh <%- manager === 'gradle' ? 'gradlew check' : 'mvnw verify' %>'
+            }
+            post {
+                always {
+                    junit '<%- manager === 'gradle' ? 'build/test-results/test/*.xml' : 'target/surefire-reports/*.xml' %>'
+                    recordIssues aggregatingResults: true, sourceCodeEncoding: 'UTF-8', tools: [
+                        checkStyle(pattern: '<%- manager === 'gradle' ? 'build/reports/checkstyle/*.xml' : 'target/surefire-reports/*.xml' %>'),
+                        cpd(pattern: 'build/reports/cpd/*.xml'),
+                        java(pattern: '**/*.log'),                        
+                        spotBugs(pattern: 'build/reports/spotbugs/*.xml', useRankAsPriority: true)
+                    ]
+                }
+                success {
+                    jacoco execPattern: '<%- manager === 'gradle' ? 'build/jacoco/*.exec' : 'target/*.exec' %>'
+                }
+            }
+        }
+
+        stage('Comment pull request') {
+            when { changeRequest() }
+            environment {
+                REPOSITORY_NAME = "${env.GIT_URL.tokenize('/')[3].split('\\.')[0]}"
+                REPOSITORY_OWNER = "${env.GIT_URL.tokenize('/')[2]}"
+            }
+            steps {
+                ViolationsToGitHub([
+                    gitHubUrl: env.GIT_URL,
+                    repositoryName: env.REPOSITORY_NAME,
+                    repositoryOwner: env.REPOSITORY_OWNER,
+                    pullRequestId: env.CHANGE_ID,
+
+                    createCommentWithAllSingleFileComments: false,
+                    createSingleFileComments: true,
+                    commentOnlyChangedContent: true,
+                    minSeverity: 'INFO',
+                    keepOldComments: false,
+
+                    violationConfigs: [
+                        [parser: 'CHECKSTYLE', reporter: 'Checkstyle', pattern: 'build/reports/checkstyle/.*\\.xml'],
+                        [parser: 'CPD', reporter: 'CPD', pattern: 'build/reports/cpd/.*\\.xml'],
+                        [parser: 'FINDBUGS', reporter: 'Spotbugs', pattern: 'build/reports/spotbugs/.*\\.xml'],
+                   ]])
+            }
+        }
+    }
+}

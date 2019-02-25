@@ -1,10 +1,11 @@
 const generateUi = require('./prompt')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const Branding = require('../../commons/branding')
-const springFeatures = require('./features')
+const springBootFeatures = require('./features')
 const Templates = require('./templates')
+const _ = require('lodash')
 
-module.exports = class SpringGenerator extends YasgeGenerator {
+class SpringBootGenerator extends YasgeGenerator {
   
   initializing() {
     this.composed = this.options.composed === undefined ? null : this.options.composed
@@ -13,7 +14,9 @@ module.exports = class SpringGenerator extends YasgeGenerator {
       this.log(Branding.logo());
       this.log(Branding.title("Spring project generator"))
     }
-
+    
+    this.composeWith(require.resolve('../cloud'), {composed: true})
+    this.composeWith(require.resolve('../storage'), {composed: true})
     this.composeWith(require.resolve('../docker'), {composed: true})
   }
 
@@ -24,16 +27,18 @@ module.exports = class SpringGenerator extends YasgeGenerator {
       return this.prompt(generateUi())
         .then(answers => {
           const features = this.config.get('features')
-              .concat(answers.springFeatures)
-              .concat(['docker', 'docker-compose', 'spring-boot'])
-          if (answers.webServerPort) {
+              .concat(['docker', 'docker-compose', 'spring-boot', 'actuator'])
+          
+          if (answers.springWebFeatures != 'none') {
+            features.push(answers.springWebFeatures)
             features.push('openapi')
           }
-          this.config.set('features', features)
+          
+          this.config.set('features', _.uniq(features).sort())
 
           const dependencies = this.config.get('dependencies')
-              .concat(this._getDependenciesFromFeatures(springFeatures))
-          this.config.set('dependencies', dependencies)
+              .concat(this._getDependenciesFromFeatures(springBootFeatures))
+          this.config.set('dependencies', _.uniq(dependencies).sort())
 
           this.answers = answers
         })
@@ -41,22 +46,21 @@ module.exports = class SpringGenerator extends YasgeGenerator {
   }
 
   configuring() {
-    if (this.answers.webServerPort) {
+    if (this.springProjectType && this.answers.webServerPort) {
       this.config.set('webServer', true)
       this.config.set('webServerPort', this.answers.webServerPort)
-      
-      const features = this.config.get('features')
-      features.push('openapi')
-      this.config.set('features', features)
-    }
-    
+    }    
   }
 
   writing() {
-    this._copyTemplates(Templates.base(this.config.getAll()))
+    if (this.springProjectType) {
+      this._copyTemplates(Templates.base(this.config.getAll()))
 
-    if (this.config.get('webServer')) {
-      this._copyTemplates(Templates.web(this.config.getAll()))
+      if (this.config.get('webServer')) {
+        this._copyTemplates(Templates.web(this.config.getAll()))
+      }
     }
   }
 }
+
+module.exports = SpringBootGenerator

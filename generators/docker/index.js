@@ -1,8 +1,10 @@
 const YasgeGenerator = require('../../commons/yasge-generator')
 const Branding = require('../../commons/branding')
 const Templates = require('./templates')
+const dockerFeatures = require('./features')
+const _ = require('lodash')
 
-module.exports = class DockerGenerator extends YasgeGenerator {
+class DockerGenerator extends YasgeGenerator {
 
   initializing() {
     this.composed = this.options.composed === undefined ? null : this.options.composed
@@ -35,6 +37,13 @@ module.exports = class DockerGenerator extends YasgeGenerator {
 
     if (features.includes('docker-compose')) {
       this.dockerComposeEnabled = true
+
+      this.dockerCompose = _.flatten(_.compact(features.map(feature => {
+        if (dockerFeatures[feature]) {
+          return dockerFeatures[feature].services
+        }
+      }))).sort()
+      this.config.set('dockerCompose', this.dockerCompose)
     }
   }
 
@@ -48,3 +57,5 @@ module.exports = class DockerGenerator extends YasgeGenerator {
   }
 
 }
+
+module.exports = DockerGenerator

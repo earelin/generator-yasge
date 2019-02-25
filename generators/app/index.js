@@ -3,9 +3,8 @@ const Templates = require('./templates')
 const Branding = require('../../commons/branding')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const appFeatures = require('./features')
-const _ = require('lodash')
 
-module.exports = class App extends YasgeGenerator {
+class App extends YasgeGenerator {
   
   initializing() {
     this.log(Branding.logo())
@@ -20,6 +19,7 @@ module.exports = class App extends YasgeGenerator {
     this.composeWith(require.resolve('../spring-boot'), {composed: true})
     this.composeWith(require.resolve('../gradle'), {composed: true})
     this.composeWith(require.resolve('../maven'), {composed: true})
+    this.composeWith(require.resolve('../ci-cd'), {composed: true})
   }
 
   prompting() {
@@ -31,6 +31,7 @@ module.exports = class App extends YasgeGenerator {
           'checkstyle',
           'cpd',
           'jacoco',
+          'java',
           'spotbugs',
           'test'
         ])
@@ -66,3 +67,5 @@ module.exports = class App extends YasgeGenerator {
   }
 
 }
+
+module.exports = App

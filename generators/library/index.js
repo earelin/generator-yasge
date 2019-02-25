@@ -2,7 +2,7 @@ const generateUi = require('./prompt')
 const Branding = require('../../commons/branding')
 const YasgeGenerator = require('../../commons/yasge-generator')
 
-module.exports = class LibraryGenerator extends YasgeGenerator {
+class LibraryGenerator extends YasgeGenerator {
   
   initializing() {
     this.composed = this.options.composed === undefined ? null : this.options.composed
@@ -50,3 +50,5 @@ module.exports = class LibraryGenerator extends YasgeGenerator {
     ])
   }
 }
+
+module.exports = LibraryGenerator

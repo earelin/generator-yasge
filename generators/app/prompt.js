@@ -1,3 +1,6 @@
+const _ = require('lodash')
+const Validation = require('../../commons/validation')
+
 module.exports = function() {
   return [
     {
@@ -5,19 +8,22 @@ module.exports = function() {
       name: 'name',
       message: 'Name',
       default: process.cwd().split('/').pop(),
-      store: true
+      store: true,
+      validate: input => Validation.notEmpty(input)
     }, {
       type: 'input',
       name: 'groupId',
       message: 'Group Id',
       default: 'com.example',
       store: true,
+      validate: input => Validation.domain(input)
     }, {
       type: 'input',
       name: 'artifactId',
       message: 'Artifact Id',
       default: answers => answers.name,
-      store: true,        
+      store: true,
+      validate: input => Validation.machineName(input)
     }, {
       type: 'input',
       name: 'description',
@@ -54,7 +60,9 @@ module.exports = function() {
       name: 'features',
       message: 'Features',
       store: true,
-      choices: [
+      choices: [                        
+        { value: 'gson', name: 'Gson'},
+        { value: 'guava', name: 'Guava'},
         { value: 'lombok', name: 'Lombok' }
       ],
       default: ['lombok']

@@ -2,22 +2,16 @@ const inquirer = require('inquirer')
 
 module.exports = function() {
   return [{
-    type: 'checkbox',
-    name: 'springFeatures',
-    message: 'Spring features',
+    type: 'list',
+    name: 'springWebFeatures',
+    message: 'Spring web',
     store: true,
     choices: [
-      new inquirer.Separator(),
       { value: 'rest', name: 'REST Service' },
       { value: 'reactive-rest', name: 'REST Reactive Service' },
-      new inquirer.Separator(),
-      { value: 'spring-data', name: 'Spring Data' },
-      new inquirer.Separator('SQL Storage'),   
-      { value: 'h2', name: 'H2' },
-      { value: 'mysql', name: 'MySQL' },
-      new inquirer.Separator('NoSQL Storage'),
-      { value: 'elasticsearch', name: 'Elasticsearch' }
-    ]
+      { value: 'none', name: 'None' }
+    ],
+    default: 'rest'
   }, {
     type: 'input',
     name: 'webServerPort',

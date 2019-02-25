@@ -1,15 +1,24 @@
-// const generateUi = require('./prompt')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const Branding = require('../../commons/branding')
+const DependenciesService = require('../../commons/versions-service')
+const Maven = require('./maven')
+const fs = require('fs')
+const Templates = require('./templates')
 
-module.exports = class extends YasgeGenerator {
+class MavenGenerator extends YasgeGenerator {
+
+  constructor(args, opts) {
+    super(args, opts)
+
+    this.dependenciesService = new DependenciesService()
+  }
   
   initializing() {
     this.composed = this.options.composed === undefined ? null : this.options.composed
 
     if (!this.composed) {
       this.log(Branding.logo());
-      this.log(Branding.title("Maven project generation"))
+      this.log(Branding.title("Maven project generator"))
     }    
   }
 
@@ -17,25 +26,47 @@ module.exports = class extends YasgeGenerator {
     if (this.config.get('manager') === 'maven') {
       this.mavenEnabled = true
 
-      // const dependencies = this.config.get("dependencies")
-      // const versionedDependencies = this._versionCalculations(dependencies)
-      // this.config.set("dependencies", versionedDependencies)
+      const features = this.config.get('features')
+      const dependencies = this.config.get('dependencies')      
+
+      return Maven.from(features, dependencies, this.config.getAll())
+        .then(maven => this.maven = maven)
     }
   }
 
-  // writing() {
-  //   if (this.mavenEnabled) {
+  writing() {
+    if (this.mavenEnabled) {
+      const templateParameters = this.config.getAll()
+      templateParameters.maven = this.maven
 
-  //   }
-  // }
+      this._copyTemplatesWithParameters(Templates.baseTemplates(), templateParameters)
+      //this._copyTemplatesWithParameters(this.maven.templates, templateParameters)
+    }
+  }
 
-  // installing() {
-  //   if (this.mavenEnabled) {
-  //     return this.spawnCommand('mvn', ['wrapper'])
-  //       .then(() => {
-  //         this.spawnCommand('sh', ['mvnw', 'verify'])
-  //       })
-  //   }
-  // }
+  install() {
+    if (this.mavenEnabled) {
+      if (!this._isWrapperInstalled()) {
+        this.spawnCommandSync('mvn', ['-N', 'io.takari:maven:wrapper'])
+      }
+      this.spawnCommandSync('sh', [this.destinationPath('mvnw'), 'verify'])
+    }
+  }
+
+  _isWrapperInstalled() {
+    let wrapperInstalled
+    try {
+      wrapperInstalled = fs.existsSync(this.destinationPath('.mvnw/wrapper/maven-wrapper.jar'))
+        && fs.existsSync(this.destinationPath('.mvnw/wrapper/maven-wrapper.properties'))
+        && fs.existsSync(this.destinationPath('.mvnw/wrapper/MavenWrapperDownloader.java'))
+        && fs.existsSync(this.destinationPath('mvnw'))
+        && fs.existsSync(this.destinationPath('mvnw.cmd'))
+    } catch(e) {
+      wrapperInstalled = false
+    }
+    return wrapperInstalled
+  }
 
 }
+
+module.exports = MavenGenerator

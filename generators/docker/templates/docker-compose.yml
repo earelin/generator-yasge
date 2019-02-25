@@ -9,5 +9,25 @@ services:
       - "<%- webServerPort %>:<%- webServerPort %>"
 <% } -%>
 
+<% if (dockerCompose.includes('elasticsearch')) { -%>
+  elasticsearch:
+    extends:
+      file: docker-compose-infrastructure.yml
+      service: elasticsearch
+<% } -%>
+
+<% if (dockerCompose.includes('mysql')) { -%>
+  mysql:
+    extends:
+      file: docker-compose-infrastructure.yml
+      service: mysql
+<% } -%>
+
+volumes:
+<% if (dockerCompose.includes('elasticsearch')) { -%>  elasticsearch-data:
+<% } -%>
+<% if (dockerCompose.includes('mysql')) { -%>  mysql-data:
+<% } -%>
+
 network:
   <%- artifactId %>:
