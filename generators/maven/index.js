@@ -5,6 +5,7 @@ const Maven = require('./maven')
 const fs = require('fs')
 const Templates = require('./templates')
 
+
 class MavenGenerator extends YasgeGenerator {
 
   constructor(args, opts) {
@@ -54,7 +55,7 @@ class MavenGenerator extends YasgeGenerator {
   }
 
   _isWrapperInstalled() {
-    let wrapperInstalled
+    let wrapperInstalled = false
     try {
       wrapperInstalled = fs.existsSync(this.destinationPath('.mvnw/wrapper/maven-wrapper.jar'))
         && fs.existsSync(this.destinationPath('.mvnw/wrapper/maven-wrapper.properties'))

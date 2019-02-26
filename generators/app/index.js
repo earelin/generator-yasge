@@ -5,7 +5,7 @@ const YasgeGenerator = require('../../commons/yasge-generator')
 const appFeatures = require('./features')
 
 class App extends YasgeGenerator {
-  
+
   initializing() {
     this.log(Branding.logo())
     this.log(Branding.title("Java project generation"))
