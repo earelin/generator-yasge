@@ -54,11 +54,13 @@ class SpringBootGenerator extends YasgeGenerator {
 
   writing() {
     if (this.springProjectType) {
-      this._copyTemplates(Templates.base(this.config.getAll()))
+      const fileOperations = []
+      fileOperations.push(this._copyTemplates(Templates.base(this.config.getAll())))
 
       if (this.config.get('webServer')) {
-        this._copyTemplates(Templates.web(this.config.getAll()))
+        fileOperations.push(this._copyTemplates(Templates.web(this.config.getAll())))
       }
+      return Promise.all(fileOperations)
     }
   }
 }

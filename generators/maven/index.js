@@ -40,7 +40,7 @@ class MavenGenerator extends YasgeGenerator {
       const templateParameters = this.config.getAll()
       templateParameters.maven = this.maven
 
-      this._copyTemplatesWithParameters(Templates.baseTemplates(), templateParameters)
+      return this._copyTemplatesWithParameters(Templates.baseTemplates(), templateParameters)
       //this._copyTemplatesWithParameters(this.maven.templates, templateParameters)
     }
   }

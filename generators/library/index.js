@@ -44,7 +44,7 @@ class LibraryGenerator extends YasgeGenerator {
   }
 
   install() {
-    this._createFolders([
+    return this._createFolders([
       'src/main/java/' + this.config.get('basePackagePath'),
       'src/test/java/' + this.config.get('basePackagePath')
     ])

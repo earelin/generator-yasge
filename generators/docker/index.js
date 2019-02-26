@@ -49,10 +49,10 @@ class DockerGenerator extends YasgeGenerator {
 
   writing() {
     if (this.dockerEnabled) {
-      this._copyTemplates(Templates.docker())
+      return this._copyTemplates(Templates.docker())
     }
     if (this.dockerComposeEnabled) {
-      this._copyTemplates(Templates.dockerCompose())
+      return this._copyTemplates(Templates.dockerCompose())
     }
   }
 

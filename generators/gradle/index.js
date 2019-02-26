@@ -43,8 +43,10 @@ class GradleGenerator extends YasgeGenerator {
       const templateParameters = this.config.getAll()
       templateParameters.gradle = this.gradle
 
-      this._copyTemplatesWithParameters(Templates.baseTemplates(), templateParameters)
-      this._copyTemplatesWithParameters(this.gradle.templates, templateParameters)
+      const copyBaseTemplates = this._copyTemplatesWithParameters(Templates.baseTemplates(), templateParameters)
+      const copyOptionalTemplates = this._copyTemplatesWithParameters(this.gradle.templates, templateParameters)
+
+      return Promise.all([copyBaseTemplates, copyOptionalTemplates])
     }
   }
 

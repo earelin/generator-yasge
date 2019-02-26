@@ -44,6 +44,7 @@
     "cheerio": "^1.0.0-rc.2",
     "gulp-beautify": "^2.0.1",
     "gulp-if": "^2.0.2",
+    "gulp-jsbeautifier": "^3.0.0",
     "gulp-pretty-data": "^0.1.2",
     "js-yaml": "^3.12.1",
     "lodash": "^4.17.11",
@@ -69,7 +70,7 @@
       "!**/node_modules/**"
     ],
     "roots": [
-      "<rootDir>/generatos/",
+      "<rootDir>/generators/",
       "<rootDir>/commons/",
       "<rootDir>/tests/"
     ],

@@ -3,6 +3,7 @@ const Templates = require('./templates')
 const Branding = require('../../commons/branding')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const appFeatures = require('./features')
+const beautify = require('gulp-jsbeautifier');
 
 class App extends YasgeGenerator {
 
@@ -55,9 +56,9 @@ class App extends YasgeGenerator {
   }
 
   writing() {
-    this._copyTemplates(Templates.baseTemplates())
-
-    return this._downloadFile("https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml", "checkstyle.xml")
+    const copyTemplates = this._copyTemplates(Templates.baseTemplates())
+    const checkstyleDownload = this._downloadFile("https://raw.githubusercontent.com/checkstyle/checkstyle/master/src/main/resources/google_checks.xml", "checkstyle.xml")
+    return Promise.all([copyTemplates, checkstyleDownload])
   }
 
   end() {

@@ -24,29 +24,37 @@ module.exports = class extends Generator {
   }
 
   _createFolders(folders) {
+    const copyOperations = []
     for (let i = 0; i < folders.length; i++) {
-      mkdirp(folders[i])
+      copyOperations.push(mkdirp(folders[i]))
     }
+    return Promise.all(copyOperations)
   }
 
   _copyTemplates(templates) {
+    const copyOperations = []
     for (let i = 0; i < templates.length; i++) {
-      this.fs.copyTpl(
+      const copyOperation = this.fs.copyTpl(
         this.templatePath(templates[i].template),
         this.destinationPath(templates[i].destination),
         templates[i].data ? templates[i].data : this.config.getAll()
       )
+      copyOperations.push(copyOperation)
     }
+    return Promise.all(copyOperations)
   }
 
   _copyTemplatesWithParameters(templates, parameters) {
+    const copyOperations = []
     for (let i = 0; i < templates.length; i++) {
-      this.fs.copyTpl(
+      let copyOperation = this.fs.copyTpl(
         this.templatePath(templates[i].template),
         this.destinationPath(templates[i].destination),
         parameters
       )
+      copyOperations.push(copyOperation)
     }
+    return Promise.all(copyOperations)
   }
 
   _downloadFile(source, destination) {

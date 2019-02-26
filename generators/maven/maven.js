@@ -22,19 +22,11 @@ class Maven {
       this.getDependencies(),
       this.getPlugins('build'),
       this.getPlugins('reporting')
-      // this.getConfigurations(),
-      // this.getTemplates(),
-      // this.getProperties(),
-      // this.getExcludedDependencies()
     ]).then(result => {      
       return {
         dependencies: result[0],
         buildPlugins: result[1],
         reportingPlugins: result[2]
-        // configurations: result[2],
-        // templates: result[3],
-        // properties: result[4],
-        // excludedDependencies: result[5]
       }
     })
   }
