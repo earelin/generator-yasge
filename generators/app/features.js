@@ -2,29 +2,29 @@ module.exports = {
   gson: {
     dependencies: [{
       type: 'implementation',
-      group: 'com.google.code.gson',
-      id: 'gson',
+      groupId: 'com.google.code.gson',
+      artifactId: 'gson',
       lastVersion: true
     }]
   },
   guava: {
     dependencies: [{
       type: 'implementation',
-      group: 'com.google.guava',
-      id: 'guava',
+      groupId: 'com.google.guava',
+      artifactId: 'guava',
       lastVersion: true
     }]
   },
   lombok: {
     dependencies: [{
       type: 'compileOnly',
-      group: 'org.projectlombok',
-      id: 'lombok',
+      groupId: 'org.projectlombok',
+      artifactId: 'lombok',
       lastVersion: true
     }, {
       type: 'annotationProcessor',
-      group: 'org.projectlombok',
-      id: 'lombok',
+      groupId: 'org.projectlombok',
+      artifactId: 'lombok',
       lastVersion: true
     }]
   }

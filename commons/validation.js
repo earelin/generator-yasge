@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 class Validation {
   static domain(domainName, message = false) {
     if (domainName.match(/(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/g)) {

@@ -1,4 +1,3 @@
-const _ = require('lodash')
 const Validation = require('../../commons/validation')
 
 module.exports = function() {

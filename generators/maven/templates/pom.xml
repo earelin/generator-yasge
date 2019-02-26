@@ -9,13 +9,25 @@
   <name>my-app</name>
 
   <dependencies>
-    <% maven.dependencies.forEach(dependency => { -%>
-      <dependency>
-        <groupId><%- dependency.id %></groupId>
-        <artifactId><%- dependency.group %></artifactId>
-        <% if (dependency.version) { -%><version><%- dependency.version %></version><% } %>
-        <% if (dependency.scope) { -%><scope><%- dependency.scope %></scope ><% } %>
-      </dependency>
-    <% }) -%>
+    <% maven.dependencies.forEach(dependency => { if (!dependency || dependency.scope !== 'none') { %>
+    <dependency>
+      <groupId><%- dependency.groupId %></groupId>
+      <artifactId><%- dependency.artifactId %></artifactId>
+      <% if (dependency.version) { -%><version><%- dependency.version %></version><% } -%>
+      <% if (dependency.scope) { -%><scope><%- dependency.scope %></scope ><% } %>
+    </dependency>
+    <% }}) %>
   </dependencies>
+
+<% if (maven.buildPlugins) { -%>
+  <build>
+    <plugins>
+    <% maven.buildPlugins.forEach(plugin => { %>
+      <plugin>
+        <%- plugin %>
+      </plugin>
+    <% }) %>
+    </plugins>
+  </build>
+<% } %>
 </project>

@@ -1,6 +1,7 @@
-const featureTemplates = require('./features')
+const mavenFeatures = require('./features')
 const DependenciesService = require('../../commons/versions-service')
 const _ = require('lodash')
+const o2x = require('object-to-xml')
 
 class Maven {
 
@@ -18,16 +19,18 @@ class Maven {
 
   build() {
     return Promise.all([
-      this.getDependencies()
-      // this.getPlugins(),
+      this.getDependencies(),
+      this.getPlugins('build'),
+      this.getPlugins('reporting')
       // this.getConfigurations(),
       // this.getTemplates(),
       // this.getProperties(),
       // this.getExcludedDependencies()
     ]).then(result => {      
       return {
-        dependencies: result[0]
-        // plugins: result[1],
+        dependencies: result[0],
+        buildPlugins: result[1],
+        reportingPlugins: result[2]
         // configurations: result[2],
         // templates: result[3],
         // properties: result[4],
@@ -46,28 +49,55 @@ class Maven {
   getDependenciesFromFeatures() {
     return _.flatten(_.compact(this.features
       .map(feature => {
-        if (featureTemplates[feature] && featureTemplates[feature].dependencies) {
-          return featureTemplates[feature].dependencies
+        if (mavenFeatures[feature] && mavenFeatures[feature].dependencies) {
+          return mavenFeatures[feature].dependencies
         }
       })))
+  }
+
+  getPlugins(type) {
+    const plugins = _.compact(_.flatten(this.features.map(feature => {
+        if (mavenFeatures[feature]) {
+          return mavenFeatures[feature].plugins
+        }
+      }))).filter(plugin => plugin.type === type)
+
+    const versionedPlugins = this._setDependenciesLastVersion(plugins);
+
+    return Promise.all(versionedPlugins).then(plugins => {
+      return plugins.map(plugin => {
+        delete plugin.lastVersion
+        delete plugin.type
+        return o2x(plugin)
+      })
+    })
   }
 
   _setDependenciesScope(dependencies) {
     return dependencies.map(dependency => {
       switch(dependency.type) {
+        case 'compile':
+        case 'implementation':
+        case 'compileOnly':
+          break;
+        case 'runtime':
         case 'runtimeOnly':
           dependency.scope = 'runtime'
           break
+        case 'testCompile':
+        case 'testImplementation':
         case 'testCompileOnly':
-        case 'testImplementation':        
+        case 'testRuntime':      
         case 'testRuntimeOnly':
           dependency.scope = 'test'
           break
+        default:
+          dependency.scope = 'none'
       }
       return dependency
     })
-  } 
-
+  }
+  
   _setDependenciesLastVersion(dependencies) {
     return dependencies.map(dependency => {
       if (dependency.lastVersion) {

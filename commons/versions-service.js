@@ -20,9 +20,9 @@ class VersionsService {
    * @param String dependency 
    */
   getDependencyLastVersion(dependency) {
-    return axios.get(`${this.mavenSearchUrl}?q=g:"${dependency.group}"+AND+a:"${dependency.id}"&wt=json`, {
-      adapter: this.http
-    })
+    return axios.get(`${this.mavenSearchUrl}?q=g:"${dependency.groupId}"+AND+a:"${dependency.artifactId}"&wt=json`, {
+        adapter: this.http
+      })
       .then(response => {
         if (response.data.response.docs[0]) {
           return response.data.response.docs[0].latestVersion
@@ -36,8 +36,8 @@ class VersionsService {
    */
   getGradlePluginLastVersion(plugin) {
     return axios.get(`${this.gradleUrl}/${plugin.id}`, {
-      adapter: this.http
-    })
+        adapter: this.http
+      })
       .then(response => {
         const $ = cheerio.load(response.data)
         const version = $('.version-info h3').text().match(/Version (.*) \(latest\)/)

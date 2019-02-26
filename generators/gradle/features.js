@@ -53,8 +53,8 @@ tasks.withType(com.github.spotbugs.SpotBugsTask) {
 }`,
     dependencies: [{
       type: "spotbugsPlugins",
-      group: "com.h3xstream.findsecbugs",
-      id: "findsecbugs-plugin",
+      groupId: "com.h3xstream.findsecbugs",
+      artifactId: "findsecbugs-plugin",
       lastVersion: true
     }]
   },

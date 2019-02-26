@@ -31,7 +31,7 @@ configurations {
 
 dependencies {
 <% gradle.dependencies.forEach(dependency => {-%>
-    <%- dependency.type %> '<%- dependency.group %>:<%- dependency.id %><%- dependency.version ? ':' + dependency.version : '' %>'
+    <%- dependency.type %> '<%- dependency.groupId %>:<%- dependency.artifactId %><%- dependency.version ? ':' + dependency.version : '' %>'
 <% }) -%>
 }
 
