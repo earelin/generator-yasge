@@ -76,16 +76,6 @@ module.exports = {
 //       lastVersion: true
 //     }]
 //   },
-//   java: {
-//     plugins: [{
-//       id: "java"
-//     }]
-//   },
-//   'java-library': {
-//     plugins: [{
-//       id: "java-library"
-//     }]
-//   },
 //   'maven-publish': {
 //     plugins: [{
 //       id: "maven"

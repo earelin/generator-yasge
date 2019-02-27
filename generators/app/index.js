@@ -3,7 +3,6 @@ const Templates = require('./templates')
 const Branding = require('../../commons/branding')
 const YasgeGenerator = require('../../commons/yasge-generator')
 const appFeatures = require('./features')
-const beautify = require('gulp-jsbeautifier');
 
 class App extends YasgeGenerator {
 

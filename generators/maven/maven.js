@@ -54,13 +54,14 @@ class Maven {
         }
       }))).filter(plugin => plugin.type === type)
 
-    const versionedPlugins = this._setDependenciesLastVersion(plugins);
-
-    return Promise.all(versionedPlugins).then(plugins => {
-      return plugins.map(plugin => {
-        delete plugin.lastVersion
-        delete plugin.type
-        return o2x(plugin)
+    return Promise.all(this._setDependenciesLastVersion(plugins))
+      .then(plugins => {
+        return Promise.all(this._setPluginsDependenciesLastVersion(plugins))
+      .then(plugins => {
+        return plugins.map(plugin => {
+          delete plugin.type
+          return o2x(plugin)
+        })
       })
     })
   }
@@ -89,10 +90,25 @@ class Maven {
       return dependency
     })
   }
+
+  _setPluginsDependenciesLastVersion(plugins) {
+    const versionedPluginDependencies = plugins.map(plugin => {
+      if (plugin.dependencies && plugin.dependencies.dependency) {
+        return Promise.all(this._setDependenciesLastVersion(plugin.dependencies.dependency))
+          .then(dependencies => {                  
+            plugin.dependencies.dependency = dependencies
+            return plugin
+        })
+      }
+      return Promise.resolve(plugin)
+    })
+    return versionedPluginDependencies
+  }
   
   _setDependenciesLastVersion(dependencies) {
     return dependencies.map(dependency => {
       if (dependency.lastVersion) {
+        delete dependency.lastVersion
         return this.dependenciesService.getDependencyLastVersion(dependency)
           .then(version => {
             dependency.version = version
