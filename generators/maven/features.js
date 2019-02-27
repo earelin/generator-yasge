@@ -25,31 +25,63 @@ module.exports = {
         }
       }
     }]
+  },  
+  cpd: {
+    plugins: [{
+      type: 'build',
+      groupId: 'org.apache.maven.plugins',
+      artifactId: 'maven-pmd-plugin',
+      lastVersion: true,
+      executions: {
+        execution: {
+          phase: 'test',
+          goals: {
+            goal: ['cpd', 'cpd-check', 'check']
+          }
+        }
+      }
+    }],
+  },
+  jacoco: {
+    plugins: [{
+      type: 'build',
+      groupId: 'org.jacoco',
+      artifactId: 'jacoco-maven-plugin',
+      lastVersion: true,
+      executions: {
+        execution: [{
+          id: 'default-prepare-agent',
+          goals: {
+            goal: ['prepare-agent']
+          }
+        }, {
+          id: 'default-report',
+          goals: {
+            goal: ['report']
+          }
+        }, {
+          id: 'default-check',
+          goals: {
+            goal: ['check']
+          },
+          configuration: {
+            rules: {
+              rule: {
+                element: 'BUNDLE',
+                limits: {
+                  limit: {
+                    counter: 'COMPLEXITY',
+                    value: 'COVEREDRATIO',
+                    minimum: 0.10
+                  }
+                }
+              }
+            }
+          }
+        }]
+      }
+    }],
   }
-//   cpd: {
-//     plugins: [{
-//       id: 'de.aaschmid.cpd',
-//       lastVersion: true
-//     }],
-//     configuration: `
-// cpd {
-//     ignoreFailures = true
-// }`
-//   },
-//   jacoco: {
-//     plugins: [{
-//       id: 'jacoco'      
-//     }],
-//     configuration: `
-// jacocoTestReport {
-//     reports {
-//         xml.enabled = true
-//         html.enabled = true
-//     }
-// }
-  
-// check.dependsOn jacocoTestReport`
-//   },
 //   spotbugs: {
 //     plugins: [{
 //       id: 'com.github.spotbugs',
