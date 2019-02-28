@@ -17,8 +17,8 @@ module.exports = function() {
     name: 'webServerPort',
     message: 'Web server port',
     store: true,
-    default: 8080,
-    when: answers => answers.springFeatures.includes('rest') 
-        || answers.springFeatures.includes('reactive-rest')
+    default: 9000,
+    when: answers => answers.springWebFeatures.includes('rest') 
+        || answers.springWebFeatures.includes('reactive-rest')
   }]
 }

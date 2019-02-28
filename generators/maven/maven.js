@@ -1,7 +1,6 @@
 const mavenFeatures = require('./features')
 const DependenciesService = require('../../commons/versions-service')
 const _ = require('lodash')
-const o2x = require('object-to-xml')
 
 class Maven {
 
@@ -21,12 +20,14 @@ class Maven {
     return Promise.all([
       this.getDependencies(),
       this.getPlugins('build'),
-      this.getPlugins('reporting')
+      this.getPlugins('reporting'),
+      this.getParent()
     ]).then(result => {      
       return {
         dependencies: result[0],
         buildPlugins: result[1],
-        reportingPlugins: result[2]
+        reportingPlugins: result[2],
+        parent: result[3]
       }
     })
   }
@@ -55,15 +56,17 @@ class Maven {
       }))).filter(plugin => plugin.type === type)
 
     return Promise.all(this._setDependenciesLastVersion(plugins))
-      .then(plugins => {
-        return Promise.all(this._setPluginsDependenciesLastVersion(plugins))
-      .then(plugins => {
-        return plugins.map(plugin => {
-          delete plugin.type
-          return o2x(plugin)
-        })
-      })
+      .then(plugins => plugins)
+  }
+
+  getParent() {
+    const feature = this.features.find(feature => {
+      return (mavenFeatures[feature] && mavenFeatures[feature].parent)
     })
+    if (feature) {
+      return this._setDependencyLastVersion(mavenFeatures[feature].parent)
+    }
+    return Promise.resolve(null)
   }
 
   _setDependenciesScope(dependencies) {
@@ -91,6 +94,18 @@ class Maven {
     })
   }
 
+  _setDependencyLastVersion(dependency) {
+    if (dependency.lastVersion) {
+      delete dependency.lastVersion
+      return this.dependenciesService.getDependencyLastVersion(dependency)
+        .then(version => {
+          dependency.version = version
+          return dependency
+        })
+    }
+    return Promise.resolve(dependency)
+  }
+
   _setPluginsDependenciesLastVersion(plugins) {
     const versionedPluginDependencies = plugins.map(plugin => {
       if (plugin.dependencies && plugin.dependencies.dependency) {
@@ -106,17 +121,7 @@ class Maven {
   }
   
   _setDependenciesLastVersion(dependencies) {
-    return dependencies.map(dependency => {
-      if (dependency.lastVersion) {
-        delete dependency.lastVersion
-        return this.dependenciesService.getDependencyLastVersion(dependency)
-          .then(version => {
-            dependency.version = version
-            return dependency
-          })
-      }
-      return Promise.resolve(dependency)
-    })
+    return dependencies.map(dependency => this._setDependencyLastVersion(dependency))
   }
 
 }

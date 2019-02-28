@@ -46,10 +46,13 @@ class SpringBootGenerator extends YasgeGenerator {
   }
 
   configuring() {
-    if (this.springProjectType && this.answers.webServerPort) {
+    if (this.springProjectType && (this.answers.springWebFeatures.includes('rest')
+          || this.answers.springWebFeatures.includes('reactive-rest'))) {
       this.config.set('webServer', true)
       this.config.set('webServerPort', this.answers.webServerPort)
-    }    
+    } else {
+      this.config.set('webServer', false)
+    } 
   }
 
   writing() {

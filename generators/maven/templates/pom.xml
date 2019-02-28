@@ -2,11 +2,19 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
+<% if (maven.parent) { -%>
+  <parent>
+    <groupId><%- maven.parent.groupId %></groupId>
+    <artifactId><%- maven.parent.artifactId %></artifactId>
+    <version><%- maven.parent.version %></version>
+  </parent>
+<% } -%>
+
   <groupId><%- groupId %></groupId>
   <artifactId><%- artifactId %></artifactId>
   <packaging>jar</packaging>
   <version>1.0.0-SNAPSHOT</version>
-  <name>my-app</name>
+  <name><%- name %></name>
 
   <dependencies>
     <% maven.dependencies.forEach(dependency => { if (!dependency || dependency.scope !== 'none') { %>
@@ -24,10 +32,43 @@
     <plugins>
     <% maven.buildPlugins.forEach(plugin => { %>
       <plugin>
-        <%- plugin %>
+        <artifactId><%- plugin.artifactId %></artifactId>
+        <groupId><%- plugin.groupId %></groupId>
+        <% if (plugin.version) { -%><version><%- plugin.version %></version><% } -%>
+        <% if (plugin.configuration) { -%><%- plugin.configuration %><% } %>
       </plugin>
     <% }) %>
     </plugins>
   </build>
 <% } %>
+
+<% if (maven.reportingPlugins) { -%>
+  <reporting>
+    <plugins>
+    <% maven.reportingPlugins.forEach(plugin => { %>
+      <plugin>
+        <artifactId><%- plugin.artifactId %></artifactId>
+        <groupId><%- plugin.groupId %></groupId>
+        <% if (plugin.version) { -%><version><%- plugin.version %></version><% } -%>
+        <% if (plugin.configuration) { -%><%- plugin.configuration %><% } %>
+      </plugin>
+    <% }) %>
+    </plugins>
+  </reporting>
+<% } %>
+
+<% if (features.includes('maven-publish')) { -%>
+  <distributionManagement>
+    <repository>
+      <id><%- artifactId + '-repository' %></id>
+      <name><%- name + ' repository' %></name>
+      <url><%- publishRepositoryReleasesUrl %></url>
+    </repository>
+    <snapshotRepository>
+      <id><%- artifactId + '-snapshots-repository' %></id>
+      <name><%- name + ' snapshots repository' %></name>
+      <url><%- publishRepositorySnapshotsUrl %></url>
+    </snapshotRepository>
+  </distributionManagement>
+<% } -%>
 </project>
