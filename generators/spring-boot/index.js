@@ -27,18 +27,13 @@ class SpringBootGenerator extends YasgeGenerator {
       return this.prompt(generateUi())
         .then(answers => {
           const features = this.config.get('features')
-              .concat(['docker', 'docker-compose', 'spring-boot', 'actuator'])
           
           if (answers.springWebFeatures != 'none') {
             features.push(answers.springWebFeatures)
-            features.push('openapi')
           }
-          
-          this.config.set('features', _.uniq(features).sort())
+          this.config.set('features', features)
 
-          const dependencies = this.config.get('dependencies')
-              .concat(this._getDependenciesFromFeatures(springBootFeatures))
-          this.config.set('dependencies', _.uniq(dependencies).sort())
+          this._calculateDependencies(springBootFeatures)
 
           this.answers = answers
         })

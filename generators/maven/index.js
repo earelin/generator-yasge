@@ -28,8 +28,7 @@ class MavenGenerator extends YasgeGenerator {
       this.mavenEnabled = true
 
       const features = this.config.get('features')
-      const dependencies = this.config.get('dependencies')      
-
+      const dependencies = this.config.get('dependencies')
       return Maven.from(features, dependencies, this.config.getAll())
         .then(maven => this.maven = maven)
     }

@@ -15,6 +15,15 @@ module.exports = {
       lastVersion: true
     }]
   },
+  java: {
+    features: [
+      'checkstyle',
+      'cpd',
+      'jacoco',      
+      'spotbugs',
+      'test'
+    ]
+  },
   lombok: {
     dependencies: [{
       type: 'compileOnly',

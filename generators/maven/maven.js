@@ -96,9 +96,9 @@ class Maven {
 
   _setDependencyLastVersion(dependency) {
     if (dependency.lastVersion) {
-      delete dependency.lastVersion
       return this.dependenciesService.getDependencyLastVersion(dependency)
         .then(version => {
+          console.log(dependency, version)
           dependency.version = version
           return dependency
         })
@@ -110,7 +110,7 @@ class Maven {
     const versionedPluginDependencies = plugins.map(plugin => {
       if (plugin.dependencies && plugin.dependencies.dependency) {
         return Promise.all(this._setDependenciesLastVersion(plugin.dependencies.dependency))
-          .then(dependencies => {                  
+          .then(dependencies => {
             plugin.dependencies.dependency = dependencies
             return plugin
         })

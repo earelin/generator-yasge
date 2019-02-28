@@ -1,4 +1,11 @@
 module.exports = {
+  'spring-boot': {
+    features: [
+      'docker',
+      'docker-compose',
+      'actuator'
+    ]
+  },
   test: {
     dependencies: [{
       type: 'implementation',
@@ -29,6 +36,9 @@ module.exports = {
     }]
   },
   rest: {
+    features: [
+      'openapi'
+    ],
     dependencies: [{
       type: 'implementation',
       groupId: 'org.springframework.boot',

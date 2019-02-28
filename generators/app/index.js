@@ -27,18 +27,15 @@ class App extends YasgeGenerator {
       .then(answers => {        
         this.config.set("type", answers.type)
         this.config.set("manager", answers.manager)
-        const features = answers.features.concat([
-          'checkstyle',
-          'cpd',
-          'jacoco',
-          'java',
-          'spotbugs',
-          'test'
-        ])
+
+        const features = answers.features
+        features.push('java')
+        if (answers.type == "spring-boot") {
+          features.push("spring-boot")
+        }
         this.config.set("features", features)
 
-        const dependencies = this._getDependenciesFromFeatures(appFeatures)
-        this.config.set("dependencies", dependencies)
+        this._calculateDependencies(appFeatures)
 
         this.answers = answers
       })

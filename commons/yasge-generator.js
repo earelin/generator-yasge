@@ -65,8 +65,20 @@ module.exports = class extends Generator {
     })
   }
 
-  _getDependenciesFromFeatures(features) {
+  _getDependentFeatures(features) {
     return this.config.get('features')
+      .map(feature => {
+        if (features[feature]) {
+          return features[feature].features
+        }
+      })
+      .filter(dependencies => dependencies !== null && dependencies !== undefined)
+      .reduce((accumulatedDependencies, dependencies) => accumulatedDependencies.concat(dependencies), [])
+  }
+
+  _getDependenciesFromFeatures(features) {
+    const enabledFeatures = this.config.get('features')
+    return enabledFeatures
       .map(feature => {
         if (features[feature]) {
           return features[feature].dependencies
@@ -74,5 +86,21 @@ module.exports = class extends Generator {
       })
       .filter(dependencies => dependencies !== null && dependencies !== undefined)
       .reduce((accumulatedDependencies, dependencies) => accumulatedDependencies.concat(dependencies), [])
+      .filter(dependency => {
+        if (dependency.whenFeature) {
+          return enabledFeatures.includes(dependency.whenFeature)
+        }
+        return true
+      })
+  }
+
+  _calculateDependencies(generatorFeatures) {
+    const features = this.config.get('features')
+        .concat(this._getDependentFeatures(generatorFeatures))
+    this.config.set('features', _.uniq(features).sort())
+
+    const dependencies = this.config.get('dependencies')
+        .concat(this._getDependenciesFromFeatures(generatorFeatures))
+    this.config.set('dependencies', _.uniq(dependencies).sort())
   }
 }
