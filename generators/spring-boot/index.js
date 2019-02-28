@@ -3,7 +3,6 @@ const YasgeGenerator = require('../../commons/yasge-generator')
 const Branding = require('../../commons/branding')
 const springBootFeatures = require('./features')
 const Templates = require('./templates')
-const _ = require('lodash')
 
 class SpringBootGenerator extends YasgeGenerator {
   
@@ -55,8 +54,8 @@ class SpringBootGenerator extends YasgeGenerator {
       const fileOperations = []
       fileOperations.push(this._copyTemplates(Templates.base(this.config.getAll())))
 
-      if (this.config.get('webServer')) {
-        fileOperations.push(this._copyTemplates(Templates.web(this.config.getAll())))
+      if (this.config.get('features').includes('openapi')) {
+        fileOperations.push(this._copyTemplates(Templates.openapi(this.config.getAll())))
       }
       return Promise.all(fileOperations)
     }

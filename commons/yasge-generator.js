@@ -4,6 +4,7 @@ const axios = require('axios')
 const fs = require('fs')
 const chalk = require('chalk')
 const Branding = require('./branding')
+const _ = require('lodash')
 
 module.exports = class extends Generator {
 

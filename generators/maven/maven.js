@@ -98,7 +98,6 @@ class Maven {
     if (dependency.lastVersion) {
       return this.dependenciesService.getDependencyLastVersion(dependency)
         .then(version => {
-          console.log(dependency, version)
           dependency.version = version
           return dependency
         })

@@ -5,16 +5,8 @@
 ### Maven ###
 /target/
 
-### Node ###
-/node_modules/
-
-### Jest ###
-/coverage/
-
 ### Visual studio code ###
-.idea
-*.iml
-.project
+/.project/
 /.settings/
 /.classpath/
 /bin/
