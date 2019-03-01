@@ -16,6 +16,13 @@
   <version>1.0.0-SNAPSHOT</version>
   <name><%- name %></name>
 
+<% if (maven.properties) { -%>
+  <properties>
+  <% maven.properties.forEach(property => { -%>
+    <<%- property.key %>><%- property.value %></<%- property.key %>>
+  <% }) -%></properties>  
+<% } -%>
+
   <dependencies>
     <% maven.dependencies.forEach(dependency => { if (!dependency || dependency.scope !== 'none') { %>
     <dependency>
@@ -27,8 +34,9 @@
     <% }}) %>
   </dependencies>
 
-<% if (maven.buildPlugins) { -%>
+<% if (maven.buildPlugins && maven.pluginManagement) { -%>
   <build>
+  <% if (maven.buildPlugins) { -%>
     <plugins>
     <% maven.buildPlugins.forEach(plugin => { %>
       <plugin>
@@ -39,6 +47,21 @@
       </plugin>
     <% }) %>
     </plugins>
+  <% } %>
+  <% if (maven.pluginManagement) { -%>
+    <pluginManagement>
+      <plugins>
+      <% maven.pluginManagement.forEach(plugin => { %>
+        <plugin>
+          <artifactId><%- plugin.artifactId %></artifactId>
+          <groupId><%- plugin.groupId %></groupId>
+          <% if (plugin.version) { -%><version><%- plugin.version %></version><% } -%>
+          <% if (plugin.configuration) { -%><%- plugin.configuration %><% } %>
+        </plugin>
+      <% }) %>
+      </plugins>
+    </pluginManagement>
+  <% } %>
   </build>
 <% } %>
 

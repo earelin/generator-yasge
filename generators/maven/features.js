@@ -1,25 +1,44 @@
 module.exports = {
   checkstyle: {
-    plugins: [{
-      type: 'reporting',
-      lastVersion: true,
-      groupId: 'org.apache.maven.plugins',
-      artifactId: 'maven-checkstyle-plugin',      
-    }],
-    dependencies: [{
-      type: 'implementation',
-      groupId: 'com.puppycrawl.tools',
-      artifactId: 'checkstyle',
-      lastVersion: true
-    }]
-  },  
+    plugins: [
+      {
+        type: 'pluginManagement',
+        lastVersion: true,
+        groupId: 'org.apache.maven.plugins',
+        artifactId: 'maven-checkstyle-plugin',
+        configuration: `
+          <configuration>
+            <failsOnError>false</failsOnError>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>com.puppycrawl.tools</groupId>
+              <artifactId>checkstyle</artifactId>
+              <version>LATEST</version>
+            </dependency>
+          </dependencies>`
+      }, {
+        type: 'reporting',
+        groupId: 'org.apache.maven.plugins',
+        artifactId: 'maven-checkstyle-plugin'
+      }
+    ],
+    properties: [
+      {
+        key: 'checkstyle.config.location',
+        value: 'checkstyle.xml'
+      }
+    ]
+  },
   cpd: {
-    plugins: [{
-      type: 'reporting',
-      groupId: 'org.apache.maven.plugins',
-      artifactId: 'maven-pmd-plugin',
-      lastVersion: true      
-    }],
+    plugins: [
+      {
+        type: 'reporting',
+        groupId: 'org.apache.maven.plugins',
+        artifactId: 'maven-pmd-plugin',
+        lastVersion: true      
+      }
+    ],
   },
   jacoco: {
     plugins: [{
@@ -65,22 +84,32 @@ module.exports = {
     }]
   },
   java: {
-    plugins: [{
-      type: 'build',
-      groupId: 'org.apache.maven.plugins',
-      artifactId: 'maven-site-plugin',
-      lastVersion: true
-    }, {
-      type: 'build',
-      groupId: 'org.apache.maven.plugins',
-      artifactId: 'maven-project-info-reports-plugin',
-      lastVersion: true,
-      configuration: `
-        <configuration>
-          <dependencyLocationsEnabled>false</dependencyLocationsEnabled>
-        </configuration>
-      `
-    }]
+    plugins: [
+      {
+        type: 'build',
+        groupId: 'org.apache.maven.plugins',
+        artifactId: 'maven-site-plugin',
+        lastVersion: true
+      }, {
+        type: 'reporting',
+        groupId: 'org.apache.maven.plugins',
+        artifactId: 'maven-project-info-reports-plugin',
+        lastVersion: true,
+        configuration: `
+          <reportSets>
+            <reportSet>
+              <reports>
+                <report>index</report>
+              </reports>
+            </reportSet>
+          </reportSets>`
+      }, {
+        type: 'reporting',
+        groupId: 'org.apache.maven.plugins',
+        artifactId: 'maven-jxr-plugin',
+        lastVersion: true
+      }
+    ]
   },
   spotbugs: {
     plugins: [{
