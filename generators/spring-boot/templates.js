@@ -18,7 +18,7 @@ class SpringBootTemplates {
     }]
   }
 
-  static web(config) {
+  static openapi(config) {
     return [{
       template: 'src/SwaggerConfig.java',
       destination: `src/main/java/${config.basePackagePath}/config/SwaggerConfig.java`

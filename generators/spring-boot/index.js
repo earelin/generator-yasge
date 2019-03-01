@@ -47,7 +47,7 @@ class SpringBootGenerator extends YasgeGenerator {
       this.config.set('webServerPort', this.answers.webServerPort)
     } else {
       this.config.set('webServer', false)
-    } 
+    }
   }
 
   writing() {
@@ -55,8 +55,8 @@ class SpringBootGenerator extends YasgeGenerator {
       const fileOperations = []
       fileOperations.push(this._copyTemplates(Templates.base(this.config.getAll())))
 
-      if (this.config.get('webServer')) {
-        fileOperations.push(this._copyTemplates(Templates.web(this.config.getAll())))
+      if (this.config.get('features').includes('rest')) {
+        fileOperations.push(this._copyTemplates(Templates.openapi(this.config.getAll())))
       }
       return Promise.all(fileOperations)
     }
