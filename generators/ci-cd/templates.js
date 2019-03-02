@@ -5,10 +5,4 @@ module.exports = class {
       destination: 'Jenkinsfile'
     }]
   }
-  static travis() {
-    return [{
-      template: 'travis.yml',
-      destination: '.travis.yml'
-    }]
-  }
 }

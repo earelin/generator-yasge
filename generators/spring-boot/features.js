@@ -46,12 +46,12 @@ module.exports = {
       exclude: ['spring-boot-starter-tomcat']
     }]
   },
-  'reactive-rest': [{
+  'reactive-rest': {
     dependencies: [{
       groupId: 'org.springframework.boot',
       artifactId: 'spring-boot-starter-webflux',
       type: 'implementation',
       exclude: ['spring-boot-starter-tomcat']
     }]
-  }]
+  }
 }

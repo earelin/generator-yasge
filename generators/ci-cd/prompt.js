@@ -8,13 +8,11 @@ module.exports = function() {
   }, {
     type: 'list',
     name: 'cicdPlatform',
-    message: 'Cloud platform',
+    message: 'CI/CD platform',
     store: true,
     when: answers => answers.cicd,
     choices: [
-      { value: 'jenkins', name: 'Jenkins' },
-      { value: 'travis', name: 'Travis' }
-    ],
+      { value: 'jenkins', name: 'Jenkins' }    ],
     default: 'jenkins'
   }]
 }

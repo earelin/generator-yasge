@@ -27,7 +27,7 @@ class SpringBootGenerator extends YasgeGenerator {
         .then(answers => {
           const features = this.config.get('features')
           
-          if (answers.springWebFeatures != 'none') {
+          if (answers.springWebFeatures !== 'none') {
             features.push(answers.springWebFeatures)
           }
           this.config.set('features', features)
@@ -40,8 +40,7 @@ class SpringBootGenerator extends YasgeGenerator {
   }
 
   configuring() {
-    if (this.springProjectType && (this.answers.springWebFeatures.includes('rest')
-          || this.answers.springWebFeatures.includes('reactive-rest'))) {
+    if (this.springProjectType && this.answers.springWebFeatures !== 'none') {
       this.config.set('webServer', true)
       this.config.set('webServerPort', this.answers.webServerPort)
     } else {
