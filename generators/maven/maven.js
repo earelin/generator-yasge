@@ -21,13 +21,17 @@ class Maven {
       this.getDependencies(),
       this.getPlugins('build'),
       this.getPlugins('reporting'),
-      this.getParent()
+      this.getPlugins('pluginManagement'),
+      this.getParent(),
+      this.getProperties()
     ]).then(result => {      
       return {
         dependencies: result[0],
         buildPlugins: result[1],
         reportingPlugins: result[2],
-        parent: result[3]
+        pluginManagement: result[3],
+        parent: result[4],
+        properties: result[5]
       }
     })
   }
@@ -67,6 +71,17 @@ class Maven {
       return this._setDependencyLastVersion(mavenFeatures[feature].parent)
     }
     return Promise.resolve(null)
+  }
+
+  getProperties() {
+    const properties = _.flatten(_.compact(this.features
+      .map(feature => {
+        if (mavenFeatures[feature] && mavenFeatures[feature].properties) {
+          return mavenFeatures[feature].properties
+        }
+      })))
+    
+    return Promise.resolve(properties)
   }
 
   _setDependenciesScope(dependencies) {

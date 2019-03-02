@@ -46,7 +46,7 @@ class SpringBootGenerator extends YasgeGenerator {
       this.config.set('webServerPort', this.answers.webServerPort)
     } else {
       this.config.set('webServer', false)
-    } 
+    }
   }
 
   writing() {
