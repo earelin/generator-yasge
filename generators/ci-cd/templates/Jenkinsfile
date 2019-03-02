@@ -13,9 +13,9 @@ pipeline{
             }
             post {
                 always {
-                    junit '<%- manager === 'gradle' ? 'build/test-results/test/*.xml' : 'target/surefire-reports/*.xml' %>'
+                    junit "<%- manager === 'gradle' ? 'build/test-results/test/*.xml' : 'target/surefire-reports/*.xml' %>"
                     recordIssues aggregatingResults: true, sourceCodeEncoding: 'UTF-8', tools: [
-                        checkStyle(pattern: '<%- manager === 'gradle' ? 'build/reports/checkstyle/*.xml' : 'target/surefire-reports/*.xml' %>'),
+                        checkStyle(pattern: "<%- manager === 'gradle' ? 'build/reports/checkstyle/*.xml' : 'target/surefire-reports/*.xml' %>""),
                         cpd(pattern: 'build/reports/cpd/*.xml'),
                         java(pattern: '**/*.log'),                        
                         spotBugs(pattern: 'build/reports/spotbugs/*.xml', useRankAsPriority: true)

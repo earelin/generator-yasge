@@ -15,11 +15,11 @@ class App extends YasgeGenerator {
       this.config.set('dependencies', [])
     }
 
+    this.composeWith(require.resolve('../ci-cd'), {composed: true})
     this.composeWith(require.resolve('../library'), {composed: true})
     this.composeWith(require.resolve('../spring-boot'), {composed: true})
     this.composeWith(require.resolve('../gradle'), {composed: true})
-    this.composeWith(require.resolve('../maven'), {composed: true})
-    this.composeWith(require.resolve('../ci-cd'), {composed: true})
+    this.composeWith(require.resolve('../maven'), {composed: true})    
   }
 
   prompting() {
